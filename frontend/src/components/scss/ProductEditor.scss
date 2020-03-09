@@ -1,0 +1,16 @@
+@import "./variables";
+
+.product-editor{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.product-editor__panel{
+	width: 70%;
+}
+
+.product-editor__fieldset{
+	display: flex;
+	flex-direction: column;
+}

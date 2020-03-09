@@ -1,0 +1,97 @@
+@import "../../scss/variables";
+
+.nav {
+	background-color: $color-brand-primary;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-rows: auto;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem 2.5rem;
+}
+
+.nav__logo {
+	color: white;
+	letter-spacing: .7em;
+	font-size: 8em;
+}
+
+.nav__links {
+	display: flex;
+	list-style: none;
+	align-items: center;
+	justify-content: end;
+	padding: 0;
+}
+
+.nav__link {
+	text-decoration: none;
+	color: white;
+	margin: 0 1rem;
+	font-size: 3em;
+}
+
+.nav__burger{
+	display: none;
+}
+
+@media (max-width: 2000px){
+
+	.nav__logo {
+		font-size: 2.5em;
+	}
+
+	.nav__link {
+		font-size: 1.3em;
+	}
+
+}
+
+
+@media (max-width: 1250px){
+
+	.nav__logo {
+		font-size: 2em;
+	}
+
+	.nav__link {
+		font-size: 1em;
+	}
+}
+
+@media (max-width: 700px) {
+
+	.nav{
+		min-height: 100vh;
+		grid-template-rows: auto 1fr; 
+
+		&--closed{
+			min-height: 1rem;
+		}
+	}
+
+	.nav__links{
+		margin-top: 2rem;
+		grid-column: 1/3;
+		font-size: 2rem;
+		flex-direction: column;
+
+		&--closed {
+			display: none;
+		}
+
+		& li {
+			padding: 1rem 0;
+		}
+	}
+
+	.nav__burger{
+		display: block;
+		justify-self: end;
+
+		& img {
+			width: 2rem;
+		}
+	}
+
+}

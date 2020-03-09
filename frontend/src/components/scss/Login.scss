@@ -1,0 +1,24 @@
+@import "./variables";
+
+.login{
+	display: flex;
+	justify-content: center;
+}
+
+.login__fieldset{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: auto;
+}
+
+.login__field{
+	grid-column: 1/3;
+}
+
+.login__button{
+
+	&--primary{
+		grid-column:1/3;
+	}
+}
+
