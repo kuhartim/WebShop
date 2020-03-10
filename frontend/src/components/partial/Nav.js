@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useContext } from "react";
 import {Link, useHistory } from "react-router-dom";
 
+import withAuth from "./withAuth";
+
 import {SessionContext} from "../Login";
 
 import burger from "../images/burger.svg"; 
@@ -65,4 +67,4 @@ function Nav() {
 	);
 }
 
-export default Nav;
+export default withAuth(Nav, true);

@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('@hapi/joi');
 const auth = require('../src/middleware/auth');
-const upload = multer({ dest: 'uploads/' });
 const path = require('path');
 
 const Cart = require('../src/models/cart.model');
+const Product = require('../src/models/products.model');
 
 const debug = require('debug')('backend:cartrouter');
 
-const schemaAdd = Joi.Object({
+const schemaAdd = Joi.object({
 
 	product: Joi.string()
-				.lenght(24)
+				.length(24)
 				.required(),
 
 	number: Joi.number()
@@ -20,7 +20,7 @@ const schemaAdd = Joi.Object({
 
 });
 
-const schemaAdd = Joi.Object({
+const schemaUpdate = Joi.object({
 
 	number: Joi.number()
 				.required()
@@ -28,7 +28,7 @@ const schemaAdd = Joi.Object({
 });
 
 //read all
-router.get('/', auth(), async (res, req) => {
+router.get('/', auth(), async (req, res) => {
 
 	try{
 
@@ -36,7 +36,21 @@ router.get('/', auth(), async (res, req) => {
 
 		if(!cart) return res.status(404).send('Not found');
 
-		return res.send(cart);
+		const cartPromises = cart.map(async product=> {
+			const productObject = product.toObject();
+			try{
+				const result = await Product.findById(product.product);
+				productObject.product = result.toObject();
+			}
+			catch(err){
+				productObject.product = {};
+			}
+			return productObject;
+		});
+
+		const cartEntries = await Promise.all(cartPromises);
+
+		return res.send(cartEntries);
 
 	}
 
@@ -47,7 +61,7 @@ router.get('/', auth(), async (res, req) => {
 })
 
 //add
-router.post('/', auth(), async (res, req) => {
+router.post('/', auth(), async (req, res) => {
 
 	try{
 
@@ -74,7 +88,7 @@ router.post('/', auth(), async (res, req) => {
 })
 
 //update
-router.post('/:id', auth(), (req, res) =>{
+router.post('/:id', auth(), async (req, res) =>{
 
 	try{
 
@@ -101,7 +115,7 @@ router.post('/:id', auth(), (req, res) =>{
 });
 
 //delete
-router.delete('/:id', auth(), (req, res) =>{
+router.delete('/:id', auth(), async (req, res) =>{
 
 	try{
 
@@ -122,7 +136,7 @@ router.delete('/:id', auth(), (req, res) =>{
 });
 
 //delete all
-router.delete('/', auth(), (req, res) =>{
+router.delete('/', auth(), async (req, res) =>{
 
 	try{
 
@@ -137,3 +151,5 @@ router.delete('/', auth(), (req, res) =>{
 		res.status(500).send('Internal error');
 	}
 });
+
+module.exports = router;

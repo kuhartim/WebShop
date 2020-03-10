@@ -242,6 +242,7 @@ router.get('/', async (req, res) => {
 		})
 
 		const mappedDocs = docs.map((doc) => ({
+			id: doc.id,
 			title: doc.name,
 			description: doc.description,
 			price: doc.price,

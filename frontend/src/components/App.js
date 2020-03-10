@@ -10,6 +10,7 @@ import Login from "./Login";
 import Registration from "./Registration";
 import ProductEditor from "./ProductEditor";
 import Dashboard from "./Dashboard";
+import Cart from "./Cart";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
 					<Route exact path="/products/:product" component={Product} />
 					<Route exact path="/products" component={Products} />
 					<Route exact path="/producteditor" component={ProductEditor} />
+					<Route exact path="/cart" component={Cart} />
 				</Switch>
 			</Layout>
 		</BrowserRouter>

@@ -6,12 +6,12 @@ const ObjectId = Schema.ObjectId;
 
 const Cart = new Schema({
 	user: {
-		type: Objectid,
+		type: ObjectId,
 		required: true
 	},
 
 	product: {
-		type: Objectid,
+		type: ObjectId,
 		required: true
 	},
 

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { recoverToken, isLoggedIn } from "../../services/shop.api";
 import { SessionContext } from "../Login";
 
-function withAuth(Component){
+function withAuth(Component, silent){
 
 	return (props) => {
 
@@ -24,7 +24,7 @@ function withAuth(Component){
 			return true;
 		}, [history, session]);
 
-		return hasToken ? <Component {...props} /> : null;
+		return hasToken || silent ? <Component {...props} /> : null;
 	};
 }
 

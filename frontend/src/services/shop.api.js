@@ -46,7 +46,27 @@ export function publish(name, description, price, image){
 }
 
 export function listProducts(page, perPage=20){
-	return backend.get(`/api/v1/product?page=${page}&perPage=${perPage}`);
+	return backend.get(`/api/v1/product?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
+}
+
+export function listCart(){
+	return backend.get('/api/v1/cart').catch(handleUnauthorized);
+}
+
+export function addToCart(product, number){
+	return backend.post('/api/v1/cart', {product, number}).catch(handleUnauthorized);
+}
+
+export function updateCart(id, number){
+	return backend.post(`/api/v1/cart/${id}`, {number}).catch(handleUnauthorized);
+}
+
+export function deleteCartProduct(id){
+	return backend.delete(`/api/v1/cart/${id}`).catch(handleUnauthorized);
+}
+
+export function emptyCart(){
+	return backend.delete('/api/v1/cart').catch(handleUnauthorized);
 }
 
 function handleUnauthorized(err){
