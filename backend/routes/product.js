@@ -169,11 +169,27 @@ router.delete('/:id', auth(true), async (req, res) => {
 
 		const product = await Product.findById(id);
 
-		if(req.user.id !== product.author) return res.status(403).send({ message: "Unauthorized"});
+		if(req.user.id != product.author) return res.status(403).send({ message: "Unauthorized"});
 
 		await Product.deleteOne({ _id: id });
 
 		res.send(product);
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+});
+
+//delete all
+router.delete('/', auth(true), async (req, res) => {
+
+	try{
+
+		await Product.deleteMany({ author: req.user.id});
+
+		res.send("Delted");
 
 	}
 	catch(err){

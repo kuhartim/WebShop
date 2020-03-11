@@ -125,4 +125,36 @@ router.delete('/token', auth(), async (req, res) => {
 
 });
 
+//Admin check
+router.post('/admin', auth(), async (req, res) => {
+
+	try{
+
+		const user = req.user;
+		if(!user || user.type != "ADMIN") return res.status(403).send({ message: "Unauthorized"});
+		
+		res.send('Admin');
+	}
+	catch(err){
+		debug(err);
+		res.status(500).end('Internal error');
+	}
+});
+
+//Get user
+router.post('/user', auth(), async (req, res) =>{
+
+	try{
+
+		const user = req.user;
+		if(!user) return res.status(403).send({ message: "Unauthorized"});
+
+		res.send(user);
+	}
+	catch(err){
+		debug(err);
+		res.status(500).end('Internal error');
+	}
+});
+
 module.exports = router;

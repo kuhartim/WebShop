@@ -1,10 +1,24 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import {NotificationManager} from 'react-notifications';
 import PropTypes from "prop-types";
+
+import {addToCart} from "../../services/shop.api";
 
 import "./scss/ProductPanel.scss";
 
-function ProductPanel({ title, description, price, image }) {
+function ProductPanel({ id, title, description, price, image }) {
+
+	const addCart = () => {
+		addToCart(id, 1)
+		.then(() => {
+			NotificationManager.success("Successfully added!", "Success");
+		})
+		.catch(() => {
+			console.log(id)
+			NotificationManager.error("Couldn't add product to cart!", "Error");
+		})
+	};
 
 	return (
 
@@ -17,10 +31,10 @@ function ProductPanel({ title, description, price, image }) {
 			</picture>
 			<h2 className="product-panel__title">{ title }</h2>
 			<p className="product-panel__description">{ description }</p>
-			<span className="product-panel__price">{ price }</span>
+			<span className="product-panel__price">{ price } €</span>
 			<div className="product-panel__overlay">
-				<a href="#" className="product-panel__button product-panel__button--cart" title="Add to Cart">Add to Cart</a>
-				<Link to="/products" className="product-panel__button product-panel__button--view" title="View Product">View Product</Link>
+				<a href="#" className="product-panel__button product-panel__button--cart" title="Add to Cart" onClick={addCart}>Add to Cart</a>
+				<Link to={`/products/${id}`} className="product-panel__button product-panel__button--view" title="View Product">View Product</Link>
 			</div>
 		</div>
 

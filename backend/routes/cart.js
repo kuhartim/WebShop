@@ -140,7 +140,7 @@ router.delete('/', auth(), async (req, res) =>{
 
 	try{
 
-		await Cart.delete({user: req.user.id});
+		await Cart.deleteMany({user: req.user.id});
 
 		return res.send("OK");
 

@@ -45,7 +45,7 @@ function Login(){
 				setDisabled(false);
 			});
 
-	}, [email, setDisabled, password, history]); 
+	}, [email, setDisabled, password, history, session]); 
 
 	useEffect(() => {
 		if(recoverToken()) history.push("/dashboard");
@@ -59,7 +59,7 @@ function Login(){
 					<input type="email" className="login__field" name="email" placeholder="Email" value={ email } onChange={ onEmailChange } required/>
 					<input type="password" className="login__field" name="password" placeholder="Password" value={ password } onChange={ onPasswordChange } required/>
 					<button type="submit" className="login__button login__button--primary" onClick={ login }>Login</button>
-					<Link to="/register" className="login__button login__button--secondary">Register</Link>
+					<Link to="/registration" className="login__button login__button--secondary">Register</Link>
 					<Link to="/forgot" type="button" className="login__button login__button--secondary">Forgot password?</Link>
 				</fieldset>
 			</form>

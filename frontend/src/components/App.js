@@ -25,7 +25,6 @@ function App() {
 					<Route exact path="/dashboard" component={Dashboard} />
 					<Route exact path="/products/:product" component={Product} />
 					<Route exact path="/products" component={Products} />
-					<Route exact path="/producteditor" component={ProductEditor} />
 					<Route exact path="/cart" component={Cart} />
 				</Switch>
 			</Layout>

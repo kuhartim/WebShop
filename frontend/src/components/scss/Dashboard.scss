@@ -1,0 +1,49 @@
+@import "./variables";
+
+.dashboard{
+	height: 100vh;
+	padding-top: 6rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dashboard__adminPanel{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 1em;
+}
+
+.dashboard__container{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto;
+	height: auto;
+	width: 90%;
+	border-radius: 5rem;
+	border: none;
+	box-shadow: 5px 5px 20px #858585;
+}
+
+.dashboard__button{
+	width: 10em;
+	height: 3em;
+	text-decoration: none;
+
+	&--logout{
+		border: 2px solid red;
+		border-radius: 3em;
+		background-color: white;
+		font-weight: bold;
+		font-size: 1em;
+		color: red;
+		transition: background-color .4s, color .4s;
+		margin: 2em auto;
+
+		&:hover{
+			background-color: red;
+			color: white;
+		}
+	}
+}

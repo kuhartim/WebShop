@@ -21,13 +21,15 @@ function Nav() {
 	const onclick = useCallback(e => {
 		e.preventDefault();
 		setOpen(open => !open);
-	}, []);
+	}, [setOpen]);
 
 	/*const close = useCallback(e => {
 		e.preventDefault();
 		setOpen(open => false);
 		history.push(this.getAttribute('to'));
 	}, []);*/
+
+	console.log(isLoggedIn);
 
 	return (
 
@@ -48,9 +50,14 @@ function Nav() {
 				</li>
 
 				{ isLoggedIn?(
+					<>
 					<li>
 						<Link to="/dashboard" title="Dashboard" className="nav__link" /*onClick={close}*/>Dashboard</Link>
 					</li>
+					<li>
+						<Link to="/cart" title="Cart" className="nav__link" /*onClick={close}*/>Cart</Link>
+					</li>
+					</>
 					):(
 					<>
 						<li>

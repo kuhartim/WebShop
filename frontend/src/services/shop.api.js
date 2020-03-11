@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 
 import Cookies from "js-cookie";
@@ -15,6 +15,19 @@ export async function login(email, password){
 		Cookies.set("Token", token, { expires: Date.now() + 2*60*60*1000, secure: process.env.NODE_ENV === "production"});
 
 		backend.defaults.headers.common.Authorization = `Bearer ${ token }`;
+}
+
+export function logout(){
+	Cookies.remove("Token");
+	return backend.delete('/api/v1/user/token').catch(handleUnauthorized);
+}
+
+export function isAdmin(){
+	return backend.post('/api/v1/user/admin').catch(handleUnauthorized);
+}
+
+export function getUser(){
+	return backend.post('/api/v1/user/user').catch(handleUnauthorized);
 }
 
 export function recoverToken(){
@@ -47,6 +60,18 @@ export function publish(name, description, price, image){
 
 export function listProducts(page, perPage=20){
 	return backend.get(`/api/v1/product?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
+}
+
+export function findProduct(id){
+	return backend.get(`/api/v1/product/${id}`).catch(handleUnauthorized);
+}
+
+export function deleteOneProduct(id){
+	return backend.delete(`/api/v1/product/${id}`).catch(handleUnauthorized);
+}
+
+export function deleteAllProducts(){
+	return backend.delete('/api/v1/product/').catch(handleUnauthorized);
 }
 
 export function listCart(){

@@ -4,13 +4,132 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.product-editor__panel{
-	width: 70%;
+	width: auto;
+	height: auto;
+	width: 100%;
 }
 
 .product-editor__fieldset{
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto;
+	height: 24rem;
+	border-radius: 2em;
+	border: #dddddd;
+	box-shadow: 1px 1px 20px #cccccc;
+	margin: 0 1em;
 }
+
+.product-editor__title{
+	margin: auto;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.product-editor__field{
+	width: 90%;
+	margin: auto;
+	height: 2.5rem;
+	border: 2px solid $color-brand-primary;
+	border-radius: 5em;
+	padding: 0 1em;
+
+	&--file{
+		border: none;
+		padding: 0;
+		border-radius: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 80%; 
+		height: auto;
+	}
+
+	&--textarea{
+		height: 10em;
+		border-radius: 1em;
+		resize: none;
+	}
+}
+
+.product-editor__button{
+	cursor: pointer;
+	height: 2.5rem;
+		width: 90%;
+		background-color: $color-brand-primary;
+		color: white; 
+		border: none;
+		border-radius: 2.5rem;
+		transition: color .4s, background-color .4s;
+		font-weight: bold;
+		margin: auto;
+
+		&:hover{
+			border: 2px solid $color-brand-primary;
+			color: $color-brand-primary;
+			background-color: white;
+		}
+}
+
+.product-editor__products{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 8fr 2fr;
+	height: 24rem;
+	border-radius: 2em;
+	border: #dddddd;
+	box-shadow: 1px 1px 20px #cccccc;
+	padding: 0 1em;
+	margin: 0 1em;
+	min-width: 30rem;
+}
+
+.product-editor__productTable{
+
+	width: 100%;
+
+	&--head{
+		text-align: left;
+	}
+}
+
+.product-entry__field{
+	display: flex;
+	justify-content: center;
+}
+
+.product-entry__button{
+	background-color: white;
+	margin: 0 .3em;
+	height: 1.4rem;
+	width: 4rem;
+	border: 1px solid;
+	border-radius: 1.4rem;
+	font-size: .9em;
+	font-weight: bold;
+	
+	&--edit{
+		border-color: #008296;
+		color: #008296;
+		transition: .4s;
+		cursor: pointer;
+
+		&:hover{
+			background-color: #008296;
+			color: white;
+		}
+	}
+
+	&--delete{
+		border-color: red;
+		color: red;
+		transition: .4s;
+		cursor: pointer;
+
+		&:hover{
+			background-color: red;
+			color: white;
+		}
+	}
+}
+

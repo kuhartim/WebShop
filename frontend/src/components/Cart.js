@@ -7,7 +7,17 @@ import _ from "lodash";
 import {listCart, updateCart, deleteCartProduct, emptyCart} from "../services/shop.api";
 import withAuth from "./partial/withAuth";
 
-function CartEntry({number, product: { name, price } = {}}){
+function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
+
+	const deleteProduct = useCallback(() => {
+		deleteCartProduct(cartId)
+		.then(() => {
+			NotificationManager.success("Successfully deleted!", "Success");
+		})
+		.catch(() => {
+			NotificationManager.error("Couldn't delete product from cart!", "Error");
+		})
+	}, [cartId]);
 
 	return (
 		<tr>
@@ -19,6 +29,9 @@ function CartEntry({number, product: { name, price } = {}}){
 			</td>
 			<td>
 				{price}€ * {number}
+			</td>
+			<td>
+				<button onClick={deleteProduct}>X</button>
 			</td>
 		</tr>
 	);
@@ -55,6 +68,18 @@ function Cart(){
 
 	}, [setCart]);
 
+	const deleteAll = useCallback(() => {
+		emptyCart()
+		.then(() => {
+			NotificationManager.success("Successfully deleted!", "Success");
+		})
+		.catch(() => {
+			NotificationManager.error("Couldn't delete products from cart!", "Error");
+		});
+
+		setCart([]);
+	}, [])
+
 
 	return(
 		<div>
@@ -77,10 +102,11 @@ function Cart(){
 				</thead>
 				<tbody>
 				{
-					_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} />)
+					_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} cartId={_id} />)
 				}
 				</tbody>
 			</table>
+			<button onClick={deleteAll}>Delete all</button>
 		</div>
 	);
 }
