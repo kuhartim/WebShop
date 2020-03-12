@@ -1,0 +1,75 @@
+@import "./variables";
+
+.cart{
+	height: 100vh;
+	padding-top: 6rem;
+}
+
+.cartEntry__quantity{
+}
+
+.cartEntry__buttons{
+	width: 9rem;
+}
+
+.cartEntry__number{
+	text-align: center;
+	width: 5rem;
+	height: 2rem;
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0 1em;
+	background-color: #dddddd;
+	color: #aaaaaa;
+	border: none;
+	border-radius: 1em;
+
+	&--open{
+		background-color: transparent;
+		border: 1px solid #aaaaaa;
+		color: #444444;
+	}
+}
+
+.cartEntry__button{
+	height: 2.3rem;
+	width: 40%;
+	background-color: transparent;
+	border: 2px solid;
+	border-radius: 2.5rem;
+	transition: color .4s, background-color .4s;
+	font-weight: bold;
+	margin: .2em;
+	cursor: pointer;
+
+	&--delete{
+		border-color: red;
+		color: red;
+
+		&:hover{
+			color: white;
+			background-color: red;
+		}
+	}
+}
+
+.cartEntry__editButton{
+
+	border-color: #008296;
+	color: #008296;
+
+	&:hover{
+			color: white;
+			background-color: #008296;
+		}
+
+	&--open{
+		border-color: #289600;
+		color: #289600;
+
+		&:hover{
+			color: white;
+			background-color: #289600;
+		}
+	} 
+}

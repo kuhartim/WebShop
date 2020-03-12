@@ -40,6 +40,7 @@
 		color: red;
 		transition: background-color .4s, color .4s;
 		margin: 2em auto;
+		cursor: pointer;
 
 		&:hover{
 			background-color: red;

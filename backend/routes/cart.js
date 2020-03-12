@@ -69,15 +69,29 @@ router.post('/', auth(), async (req, res) => {
 
 		if(error) return res.status(400).send({ error, message: "Validation error"});
 
-		const cart = new Cart({
-			user: req.user.id,
-			product: req.body.product,
-			number: req.body.number
-		})
+		const user = req.user.id;
+		const {product} = req.body;
 
-		const savedCart = await cart.save();
+		const existCart = await Cart.findOne({user, product});
 
-		return res.send(savedCart);
+		debug(existCart);
+
+		if(!existCart){
+			const cart = new Cart({
+				user: req.user.id,
+				product: req.body.product,
+				number: req.body.number
+			})
+
+			const savedCart = await cart.save();
+
+			return res.send(savedCart);
+		}
+		else{
+			existCart.number += req.body.number;
+			const savedCart = await existCart.save();
+			return res.send(savedCart);
+		}
 
 	}
 

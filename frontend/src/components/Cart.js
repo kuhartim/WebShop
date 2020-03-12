@@ -7,7 +7,17 @@ import _ from "lodash";
 import {listCart, updateCart, deleteCartProduct, emptyCart} from "../services/shop.api";
 import withAuth from "./partial/withAuth";
 
+import "./scss/Cart.scss";
+
 function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
+
+	const [editButton, setEditButton] = useState(false);
+	const [disabled, setDisabled] = useState(true);
+	const [cartEdit, setCartEdit] = useState(false);
+
+	const [numberValue, setNumberValue] = useState(number);
+
+	const onNumberChange = useCallback(({target: {value}}) => setNumberValue(value), [setNumberValue])
 
 	const deleteProduct = useCallback(() => {
 		deleteCartProduct(cartId)
@@ -19,19 +29,42 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
 		})
 	}, [cartId]);
 
+	const editProduct = ()=> {
+
+		setDisabled(false);
+
+		if(cartEdit){
+			updateCart(cartId, numberValue)
+			.then(() => {
+				NotificationManager.success("Successfully changed!", "Success");
+				setDisabled(true);
+			})
+			.catch(() => {
+				NotificationManager.error("Couldn't change number", "Error");
+				setDisabled(true);
+			})
+		}
+
+		setCartEdit(!cartEdit);
+
+
+	}; //z callbackom ne deluje
+
 	return (
-		<tr>
+		<tr className="cartEntry__entry">
 			<td>
 				{name}
 			</td>
 			<td>
 				{number}
 			</td>
-			<td>
-				{price}€ * {number}
+			<td className="cartEntry__quantity">
+				{price}€ x 
+				<input className={`cartEntry__number ${disabled ? "" : "cartEntry__number--open"}`} disabled={disabled} value={numberValue} onChange={onNumberChange} />
 			</td>
-			<td>
-				<button onClick={deleteProduct}>X</button>
+			<td className="cartEntry__buttons">
+				<button className="cartEntry__button cartEntry__button--delete" onClick={deleteProduct}>X</button>
+				<button className={`cartEntry__button cartEntry__editButton${cartEdit ? "--open" : ""}`} onClick={editProduct}>{cartEdit ? "Save" : "Edit"}</button>
 			</td>
 		</tr>
 	);
@@ -82,7 +115,7 @@ function Cart(){
 
 
 	return(
-		<div>
+		<div className="cart">
 			<table>
 				<thead>
 					<tr>

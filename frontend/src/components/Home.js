@@ -1,11 +1,18 @@
 import React from "react";
 
+import "./scss/Home.scss";
+
 
 function Home() {
 
 	return (
 
-		<h1>neki</h1>
+		<div className="home">
+			<div className="home__cover">
+				<h1>Welcome to TIKU</h1>
+				<span>Happy purchasing!</span>
+			</div>
+		</div>
 
 	);
 }

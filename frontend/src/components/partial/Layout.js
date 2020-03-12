@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import Nav from "./Nav";
+import Footer from "./Footer";
 import {NotificationContainer} from 'react-notifications';
 
 import { SessionContext } from "../Login";
@@ -14,8 +15,9 @@ function Layout({ children }) {
 	return (
 
 		<SessionContext.Provider value={ { isLoggedIn, setIsLoggedIn } } >
-			<Nav />
+			<Nav className="layout__nav" />
 			{ children }
+			<Footer className="layout__footer" />
 			<NotificationContainer />
 		</SessionContext.Provider>
 

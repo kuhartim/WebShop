@@ -1,6 +1,11 @@
 @import "variables";
 
 .products{
+	padding-top: 5rem;
+	height: 100vh;
+}
+
+.products__list{
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	grid-template-rows: auto;

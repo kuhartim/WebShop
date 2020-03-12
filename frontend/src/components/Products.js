@@ -38,9 +38,11 @@ function Products() {
 	return (
 
 		<div className="products">
-			{
-				products.map((product, i) => <ProductPanel key={i} {...product} />)
-			}
+			<div className="products__list">
+				{
+					products.map((product, i) => <ProductPanel key={i} {...product} />)
+				}
+			</div>
 		</div>
 
 	);

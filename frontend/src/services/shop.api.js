@@ -94,6 +94,14 @@ export function emptyCart(){
 	return backend.delete('/api/v1/cart').catch(handleUnauthorized);
 }
 
+export function signUpToNews(email){
+	return backend.post('/api/v1/news', {email}).catch(handleUnauthorized);
+}
+
+export function newsMailCheck(email){
+	return backend.post('/api/v1/news/check', {email}).catch(handleUnauthorized);
+}
+
 function handleUnauthorized(err){
 	if(err.response && err.response.status === 403) throw false;
 	throw err;

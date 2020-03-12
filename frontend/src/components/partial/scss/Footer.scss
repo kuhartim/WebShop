@@ -1,0 +1,73 @@
+@import "../../scss/variables";
+
+.footer{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto;
+}
+
+.footer__inform{
+	background-color: $color-accent-secondary;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: 2rem;
+}
+
+.footer__title{
+	font-weight: 300;
+	font-size: 2.5rem;
+	margin: .5rem;
+}
+
+.footer__subtitle{
+	font-weight: 100;
+	font-size: 1.2rem;
+	margin: .5rem;
+}
+
+.footer__fieldset{
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	grid-template-rows: 1fr;
+	height: auto;
+	width: 20rem;
+	padding: 2rem;
+	border-radius: 4rem;
+	border: none;
+	box-shadow: 5px 5px 20px #858585;
+	margin: .5rem;
+}
+
+.footer__field{
+	grid-column: 1/2;
+	background-color: transparent;
+	height: 3rem;
+	margin: auto;
+	width: 100%;
+	border: 2px solid $color-brand-primary;
+	border-radius: 5em;
+	padding: 0 1em;
+}
+
+.footer__button{
+
+	grid-column: 2/3;
+	cursor: pointer;
+	height: 2.5rem;
+	width: 85%;
+	background-color: $color-brand-primary;
+	color: white; 
+	border: none;
+	border-radius: 2.5rem;
+	transition: color .4s, background-color .4s;
+	font-weight: bold;
+	margin: auto;
+
+	&:hover{
+		border: 2px solid $color-brand-primary;
+		color: $color-brand-primary;
+		background-color: transparent;
+	}
+}
