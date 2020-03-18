@@ -1,0 +1,19 @@
+@import "./variables";
+
+.adress{
+	height: 100vh;
+	padding-top: 6rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.adress__form{
+	box-shadow: 5px 5px 20px #858585;
+	width: 35rem;
+	border-radius: 2rem;
+	padding: 2em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

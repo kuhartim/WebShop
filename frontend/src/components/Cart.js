@@ -6,10 +6,11 @@ import _ from "lodash";
 
 import {listCart, updateCart, deleteCartProduct, emptyCart} from "../services/shop.api";
 import withAuth from "./partial/withAuth";
+import CartProgress from "./partial/CartProgress";
 
 import "./scss/Cart.scss";
 
-function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
+function CartEntry({number, cartId, product: { _id: id, name, price } = {}, setTrigger}){
 
 	const [editButton, setEditButton] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -23,13 +24,14 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
 		deleteCartProduct(cartId)
 		.then(() => {
 			NotificationManager.success("Successfully deleted!", "Success");
+			setTrigger(trigger => !trigger);
 		})
 		.catch(() => {
 			NotificationManager.error("Couldn't delete product from cart!", "Error");
 		})
-	}, [cartId]);
+	}, [cartId, setTrigger]);
 
-	const editProduct = ()=> {
+	const editProduct = useCallback(()=> {
 
 		setDisabled(false);
 
@@ -48,22 +50,21 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}}){
 		setCartEdit(!cartEdit);
 
 
-	}; //z callbackom ne deluje
+	}, [setDisabled, setCartEdit, cartEdit, cartId, numberValue]); //z callbackom ne deluje
 
 	return (
-		<tr className="cartEntry__entry">
+		<tr className="cartEntry">
 			<td>
 				{name}
 			</td>
 			<td>
-				{number}
+				{price}€
 			</td>
 			<td className="cartEntry__quantity">
-				{price}€ x 
 				<input className={`cartEntry__number ${disabled ? "" : "cartEntry__number--open"}`} disabled={disabled} value={numberValue} onChange={onNumberChange} />
 			</td>
 			<td className="cartEntry__buttons">
-				<button className="cartEntry__button cartEntry__button--delete" onClick={deleteProduct}>X</button>
+				<button className="cartEntry__button cartEntry__button--delete" onClick={deleteProduct} disabled={!disabled}>Del</button>
 				<button className={`cartEntry__button cartEntry__editButton${cartEdit ? "--open" : ""}`} onClick={editProduct}>{cartEdit ? "Save" : "Edit"}</button>
 			</td>
 		</tr>
@@ -83,6 +84,7 @@ CartEntry.propTypes = {
 function Cart(){
 
 	const [cart, setCart] = useState([]);
+	const [trigger, setTrigger] = useState(false);
 
 	useEffect(()=>{
 
@@ -99,7 +101,7 @@ function Cart(){
 		})();
 
 
-	}, [setCart]);
+	}, [setCart, trigger]);
 
 	const deleteAll = useCallback(() => {
 		emptyCart()
@@ -116,6 +118,9 @@ function Cart(){
 
 	return(
 		<div className="cart">
+			<CartProgress />
+			<h1>Cart</h1>
+			<div className="cart__table">
 			<table>
 				<thead>
 					<tr>
@@ -135,11 +140,15 @@ function Cart(){
 				</thead>
 				<tbody>
 				{
-					_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} cartId={_id} />)
+					_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} cartId={_id} setTrigger={setTrigger}/>)
 				}
 				</tbody>
 			</table>
-			<button onClick={deleteAll}>Delete all</button>
+			<button className="cart__delete" onClick={deleteAll}>Delete all</button>
+			</div>
+			<div className="cart__arrows">
+
+			</div>
 		</div>
 	);
 }

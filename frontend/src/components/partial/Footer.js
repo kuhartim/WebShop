@@ -1,6 +1,8 @@
 import React, {useState, useCallback} from "react";
 import {NotificationManager} from "react-notifications";
 
+import _ from "lodash";
+
 import {signUpToNews as apiSignUp, newsMailCheck} from "../../services/shop.api";
 
 import "./scss/Footer.scss";
@@ -22,23 +24,18 @@ function Footer(){
 			return;
 		}
 
-		newsMailCheck(email)
-		.then(() => {
-			setDisabled(true);
+		setDisabled(true);
 
-			apiSignUp(email)
-				.then(() => {
-					NotificationManager.success("Sign up successful", "Success");
-					setDisabled(false);
-				})
-				.catch(() => {
-					NotificationManager.error("Sign up failed", "Error");
-					setDisabled(false);
-				});
-		})
-		.catch(() => {
-			NotificationManager.error("Mail already exist!", "Error");
-		});
+		apiSignUp(email)
+			.then(() => {
+				NotificationManager.success("Sign up successful", "Success");
+				setDisabled(false);
+			})
+			.catch(err => {
+				const message = _.get(err, "response.data.message", "Sign up failed")
+				NotificationManager.error(message, "Error");
+				setDisabled(false);
+			});
 
 
 	}, [email, setDisabled]); 

@@ -30,7 +30,7 @@ const schemaCreate = Joi.object({
 	price: Joi.number()
 				.required(),
 
-});
+}).options({ stripUnknown: true });
 
 const schemaUpdate = Joi.object({
 	name: Joi.string()
@@ -45,7 +45,7 @@ const schemaUpdate = Joi.object({
 
 	price: Joi.number()
 				.required()
-});
+}).options({ stripUnknown: true });
 
 const schemaImage = Joi.object({
 	mimetype: Joi.valid('image/gif', 'image/png', 'image/jpeg', 'image/jpg')
@@ -54,6 +54,13 @@ const schemaImage = Joi.object({
 	size: Joi.number()
 				.max(1000000) // 1 MB
 				.required()
+}).options({ stripUnknown: true });
+
+const schemaImageUpdate = Joi.object({
+	mimetype: Joi.valid('image/gif', 'image/png', 'image/jpeg', 'image/jpg'),
+
+	size: Joi.number()
+				.max(1000000) // 1 MB
 }).options({ stripUnknown: true });
 
 //create
@@ -139,12 +146,63 @@ router.post('/:id', auth(true), upload.single('image'), async (req, res) => {
 
 		if(!product) return res.status(404).send({ message: "Not found"});
 
-		if(req.user.id !== product.author) return res.status(403).send({ message: "Unauthorized"});
+		if(req.user.id !== product.author.toString()) return res.status(403).send({ message: "Unauthorized"});
 
-		const { error: errorImage } = schemaImage.validate(req.file);	
+		const { error: errorImage } = schemaImageUpdate.validate(req.file);	
+
+		if(!errorImage){
+
+			const unlink = path => new Promise((resolve, reject) =>{
+					fs.unlink(path, err => err? reject(err):resolve());
+				});
+
+			const resize = size => new Promise((resolve, reject) =>{
+			sharp(path.join(__dirname, `../uploads/${ req.file.filename }`))
+				.resize(size, size)
+				.toFile(path.join(__dirname, `../uploads/${ req.file.filename }_${size}`), err => err? reject(err):resolve());
+			});
+
+
+			try{
+				await Promise.all([
+					unlink(path.join(__dirname, `../uploads/${ product.image }_500`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_300`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_200`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_150`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }`))
+				]);
+			}
+			catch(err){
+
+			}
+
+
+			try{
+				await Promise.all([
+					resize(500),
+					resize(300),
+					resize(200),
+					resize(150)
+				]);
+			}
+			catch(err){
+
+				try{
+					await Promise.all([
+						unlink(path.join(__dirname, `../uploads/${ req.file.filename }_500`)),
+						unlink(path.join(__dirname, `../uploads/${ req.file.filename }_300`)),
+						unlink(path.join(__dirname, `../uploads/${ req.file.filename }_200`)),
+						unlink(path.join(__dirname, `../uploads/${ req.file.filename }_150`))
+					]);
+				}
+				catch(err){
+
+				}
+			}
+		}
 
 		_.assign(product, _.pick(req.body, ['name', 'description', 'price']), { 
-			image: !errorImage ? req.file.filename : product.image,
+			image: !errorImage && req.file ? req.file.filename : product.image,
 			update: Date.now()
 		});
 

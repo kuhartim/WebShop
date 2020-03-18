@@ -58,6 +58,18 @@ export function publish(name, description, price, image){
 	return backend.post('/api/v1/product', formData, { headers: {"content-type": "multipart/form-data" }}).catch(handleUnauthorized);
 }
 
+export function updateProduct(id, name, description, price, image){
+
+	const formData = new FormData();
+	formData.append("name", name);
+	formData.append("description", description);
+	formData.append("price", price);
+	formData.append("image", image);
+
+	return backend.post(`/api/v1/product/${id}`, formData, { headers: {"content-type": "multipart/form-data" }}).catch(handleUnauthorized);
+
+}
+
 export function listProducts(page, perPage=20){
 	return backend.get(`/api/v1/product?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
 }

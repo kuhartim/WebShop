@@ -13,13 +13,16 @@ function withAuth(Component, silent){
 		const history = useHistory();
 
 		const hasToken = useMemo(() => {
-			if(!isLoggedIn() && !recoverToken()){
+			if(!isLoggedIn()){
 
-				history.push("/login");
-				return false;
+				if(recoverToken()){
+					session.setIsLoggedIn(true);
+				}
+				else{
+					history.push("/login");
+					return false;
+				}
 			}
-
-			session.setIsLoggedIn(true);
 
 			return true;
 		}, [history, session]);

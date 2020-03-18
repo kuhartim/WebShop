@@ -2,6 +2,8 @@
 
 .product-panel{
 	max-width: 100%;
+	overflow-wrap: break-word;
+ 	word-wrap: break-word;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -26,6 +28,7 @@
 .product-panel__description{
 	color: #6a6a6a;
 	font-size: 3em;
+	max-width: 100%;
 }
 
 .product-panel__price{

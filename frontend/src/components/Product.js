@@ -42,6 +42,12 @@ function Product({ match: { params: { product: id } } }){
 	return(
 
 		<div className="product">
+			<picture>
+				<source srcSet={ `${productObject.image}_500` } media="(min-width: 2500px)"/>
+				<source srcSet={ `${productObject.image}_300` } media="(min-width: 1650px)"/>
+				<source srcSet={ `${productObject.image}_200` } media="(min-width: 1250px)"/>
+				<img src={ `${productObject.image}_150` } alt="" className="product-panel__image" />
+			</picture>
 			<h1>
 			{
 				productObject.name

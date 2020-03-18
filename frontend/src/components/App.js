@@ -11,6 +11,7 @@ import Registration from "./Registration";
 import ProductEditor from "./ProductEditor";
 import Dashboard from "./Dashboard";
 import Cart from "./Cart";
+import Adress from "./Adress";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
 					<Route exact path="/products/:product" component={Product} />
 					<Route exact path="/products" component={Products} />
 					<Route exact path="/cart" component={Cart} />
+					<Route exact path="/adress" component={Adress} />
 				</Switch>
 			</Layout>
 		</BrowserRouter>

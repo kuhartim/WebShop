@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect, useContext } from "react";
+import {Link, useHistoty} from "react-router-dom";
 
-import { publish as apiPublish, listProducts, deleteAllProducts, deleteOneProduct } from "../services/shop.api";
+import { publish as apiPublish, listProducts, deleteAllProducts, deleteOneProduct, updateProduct as apiUpdate, findProduct } from "../services/shop.api";
 import {NotificationManager} from 'react-notifications';
 
 import withAuth from "./partial/withAuth";
@@ -8,19 +9,29 @@ import withAuth from "./partial/withAuth";
 
 import "./scss/ProductEditor.scss";
 
-function ProductEntry({id, title, description, price}){
+
+function ProductEntry({id, title, description, price, setTrigger, isEdit, setName, setDescription, setPrice}){
 
 	const deleteProduct = useCallback(() => {
 
 		deleteOneProduct(id)
 		.then(() => {
 			NotificationManager.success("Product successfully deleted!", "Success");
+			setTrigger(trigger => !trigger);
 		})
 		.catch(() => {
 			NotificationManager.error("Couldn't delete product", "Error");
 		})
 
-	}, [id]);
+	}, [id, setTrigger]);
+
+	const edit = useCallback(() => {
+		isEdit.current = id;
+		setName(title);
+		setDescription(description);
+		setPrice(price);
+	}, [isEdit, id, setName, setDescription, setPrice, title, description, price]);
+
 
 	return (
 		<tr>
@@ -28,13 +39,15 @@ function ProductEntry({id, title, description, price}){
 				{title}
 			</td>
 			<td>
-				{description}
+				{
+					description.length > 15 ? description.substring(0, 15) + "..." : description
+				}
 			</td>
 			<td>
 				{price}€
 			</td>
 			<td className="product-entry__field">
-				<button className="product-entry__button product-entry__button--edit">Edit</button>
+				<button className={`product-entry__button ${isEdit.current ? "product-entry__button--disabled" : "product-entry__button--edit"}`} onClick={edit}>Edit</button>
 				<button className="product-entry__button product-entry__button--delete" onClick={deleteProduct}>Delete</button>
 			</td>
 		</tr>
@@ -42,6 +55,8 @@ function ProductEntry({id, title, description, price}){
 }
 
 function ProductEditor(){
+
+	const [trigger, setTrigger] = useState(false);
 
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
@@ -53,6 +68,8 @@ function ProductEditor(){
 	const [page, setPage] = useState(1);
 
 	const totalPages = useRef(1);
+	const isEdit = useRef("");
+	const initialProductLoad = useRef(false);
 
 	const [disabled, setDisabled] = useState(false);
 
@@ -62,33 +79,65 @@ function ProductEditor(){
 	const onImageChange = useCallback(({ target: {files}}) => setImage(files[0]), [setImage]);
 
 	const publish = useCallback(e => {
+
 		e.preventDefault();
 
 		setDisabled(true);
 
-		apiPublish(name, description, price, image)
-		.then( () => {
-			NotificationManager.success("Product added!", "Success");
-			setDisabled(false);
-		})
-		.catch( () => {
-			NotificationManager.error("Cannot add product", "Error");
-			setDisabled(false);
-		});
+		if(!isEdit.current){
 
-	}, [setDisabled, name, description, price, image]);
+			apiPublish(name, description, price, image)
+			.then( () => {
+				NotificationManager.success("Product added!", "Success");
+				setDisabled(false);
+				setPrice(0);
+				setName("");
+				setDescription("");
+				setImage(null);
+				setTrigger(trigger => !trigger);
+			})
+			.catch( () => {
+				NotificationManager.error("Cannot add product", "Error");
+				setDisabled(false);
+				setPrice(0);
+				setName("");
+				setDescription("");
+				setImage(null);
+			});
+		}
+		else{
+
+			apiUpdate(isEdit.current, name, description, price, image)
+			.then( () => {
+				NotificationManager.success("Product updated!", "Success");
+				setDisabled(false);
+				setImage(null);
+				setTrigger(trigger => !trigger);
+				cancleEdit();
+			})
+			.catch( () => {
+				NotificationManager.error("Cannot update product", "Error");
+				setDisabled(false);
+				setImage(null);
+				cancleEdit();
+			});
+
+		}
+
+	}, [isEdit, setTrigger, setDisabled, setProducts, name, description, price, image, setImage, setDescription, setName, setPrice]);
 
 	useEffect(() => {
 
-		if(page > totalPages.current || loading) return;
+		if((page >= totalPages.current && initialProductLoad.current) || loading) return;
 
 		setLoading(true);
 
 		listProducts(page)
 			.then(({ data: { docs, page, totalPages: total} }) => {
-				setProducts(products.concat(docs));
+				setProducts(docs);
 				setLoading(false);
 				totalPages.current = total;
+				initialProductLoad.current = true;
 			})
 			.catch((err) => {
 				console.error(err);
@@ -96,7 +145,7 @@ function ProductEditor(){
 				setLoading(false);
 			});
 
-	}, [page, setLoading, totalPages, setProducts, products]);
+	}, [page, setLoading, loading, totalPages, setProducts, trigger]);
 
 
 	const deleteAll = useCallback(() => {
@@ -112,17 +161,24 @@ function ProductEditor(){
 
 	}, [setProducts]);
 
-	return(
+	const cancleEdit = useCallback(() => {
+		isEdit.current = "";
+		setName("");
+		setDescription("");
+		setPrice(0);
+	}, [isEdit, setName, setDescription, setPrice])
 
+	return(
+		<>
 		<div className="product-editor">
 				<form method="POST">
 					<fieldset className="product-editor__fieldset" disabled = { disabled } >
-						<span className="product-editor__title">Add Product</span>
-						<input type="text" placeholder="Name" name="name" className="product-editor__field" value={ name } onChange = { onNameChange } required/>
-						<textarea name="description" className="product-editor__field product-editor__field--textarea" placeholder="description" value={ description } onChange = { onDescriptionChange } required/>
-						<input type="number" placeholder="Price" name="price" className="product-editor__field" value={ price } onChange = { onPriceChange } required />
+						<span className="product-editor__title">{ isEdit.current ? "Edit Product" : "Add Product"}</span>
+						<input type="text" placeholder="Name" name="name" className={`product-editor__field ${isEdit.current ? "product-editor__field--edit" : ""}`} value={ name } onChange = { onNameChange } required/>
+						<textarea name="description" className={`product-editor__field product-editor__field--textarea ${isEdit.current ? "product-editor__field--edit" : ""}`} placeholder="description" value={ description } onChange = { onDescriptionChange } required/>
+						<input type="number" placeholder="Price" name="price" className={`product-editor__field ${isEdit.current ? "product-editor__field--edit" : ""}`} value={ price } onChange = { onPriceChange } required />
 						<input type="file" name="image" className="product-editor__field product-editor__field--file" onChange={ onImageChange } />
-						<button type="submit" className="product-editor__button" onClick = { publish } >Submit</button>
+						<button type="submit" className={`product-editor__button ${isEdit.current ? "product-editor__button--edit" : ""}`} onClick = { publish }>{ isEdit.current ? "Edit" : "Add"}</button>
 					</fieldset>
 				</form>
 				<div className="product-editor__products">
@@ -147,7 +203,7 @@ function ProductEditor(){
 								</thead>
 								<tbody className="product-editor__productTable--body">
 								{
-									products.map((product, i) => <ProductEntry key={i} {...product} />)
+									products.map((product, i) => <ProductEntry key={product.id} {...product} setTrigger={setTrigger} isEdit={isEdit} setName={setName} setDescription={setDescription} setPrice={setPrice}/>)
 								}	
 								</tbody>
 							</table>
@@ -155,8 +211,11 @@ function ProductEditor(){
 					<button className="product-editor__button" onClick={deleteAll}>Delete all</button>
 				</div>
 		</div>
-
+		<div className="product-editor__actionButtons">
+			<button className={`product-editor__cancleProduct ${isEdit.current ? "product-editor__cancleProduct--active" : ""}`} onClick={cancleEdit}>Cancle</button>
+		</div>
+		</>
 	);
 }
 
-export default withAuth(ProductEditor);
+export default ProductEditor;

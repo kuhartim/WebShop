@@ -14,10 +14,11 @@ function Products() {
 	const [page, setPage] = useState(1);
 
 	const totalPages = useRef(1);
+	const initialProductLoad = useRef(false);
 
 	useEffect(() => {
 
-		if(page > totalPages.current || loading) return;
+		if((page >= totalPages.current && initialProductLoad.current) || loading) return;
 
 		setLoading(true);
 
@@ -26,6 +27,7 @@ function Products() {
 				setProducts(products.concat(docs));
 				setLoading(false);
 				totalPages.current = total;
+				initialProductLoad.current = true;
 			})
 			.catch((err) => {
 				console.error(err);
@@ -33,7 +35,7 @@ function Products() {
 				setLoading(false);
 			});
 
-	}, [page, setLoading, totalPages, setProducts, products]);
+	}, [page, setLoading, loading, totalPages, setProducts, products]);
 
 	return (
 

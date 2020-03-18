@@ -15,7 +15,7 @@
 	grid-template-rows: auto;
 	height: 24rem;
 	border-radius: 2em;
-	border: #dddddd;
+	border: none;
 	box-shadow: 1px 1px 20px #cccccc;
 	margin: 0 1em;
 }
@@ -50,25 +50,44 @@
 		border-radius: 1em;
 		resize: none;
 	}
+
+	&--edit{
+		border-color: #008296;
+	}
+
+	&:required{
+		box-shadow: none;
+	}
 }
 
 .product-editor__button{
 	cursor: pointer;
 	height: 2.5rem;
-		width: 90%;
-		background-color: $color-brand-primary;
-		color: white; 
-		border: none;
-		border-radius: 2.5rem;
+	width: 90%;
+	background-color: $color-brand-primary;
+	color: white; 
+	border: none;
+	border-radius: 2.5rem;
+	transition: color .4s, background-color .4s;
+	font-weight: bold;
+	margin: auto;
+
+	&:hover{
+		border: 2px solid $color-brand-primary;
+		color: $color-brand-primary;
+		background-color: white;
+	}
+
+	&--edit{
+		background-color: #008296;
 		transition: color .4s, background-color .4s;
-		font-weight: bold;
-		margin: auto;
 
 		&:hover{
-			border: 2px solid $color-brand-primary;
-			color: $color-brand-primary;
+			border: 2px solid #008296;
+			color: #008296;
 			background-color: white;
 		}
+	}
 }
 
 .product-editor__products{
@@ -77,7 +96,7 @@
 	grid-template-rows: 1fr 8fr 2fr;
 	height: 24rem;
 	border-radius: 2em;
-	border: #dddddd;
+	border: none;
 	box-shadow: 1px 1px 20px #cccccc;
 	padding: 0 1em;
 	margin: 0 1em;
@@ -90,6 +109,63 @@
 
 	&--head{
 		text-align: left;
+	}
+}
+
+.product-editor__actionButtons{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 2em;
+}
+
+.product-editor__addProduct{
+	margin: 0 1em;
+	width: 10em;
+	height: 3em;
+	font-weight: bold;
+	font-size: 1em;
+	background-color: transparent;
+	border-radius: 2em;
+	border: 2px solid;
+	border-color: #ddd;
+	color: #ddd;
+
+	&--active{
+		border-color: #14c700;
+		color: #14c700;
+		transition: .4s;
+		cursor: pointer;
+
+		&:hover{
+			background-color: #14c700;
+			color: white;
+		}
+	}
+}
+
+.product-editor__cancleProduct{
+	display: none;
+	margin: 0 1em;
+	width: 10em;
+	height: 3em;
+	font-weight: bold;
+	font-size: 1em;
+	background-color: transparent;
+	border-radius: 2em;
+	border: 2px solid;
+	border-color: red;
+	color: red;
+	transition: .4s;
+	cursor: pointer;
+
+	&:hover{
+			background-color: red;
+			color: white;
+		}
+
+	&--active{
+		display: block;
 	}
 }
 
@@ -107,6 +183,10 @@
 	border-radius: 1.4rem;
 	font-size: .9em;
 	font-weight: bold;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	
 	&--edit{
 		border-color: #008296;
@@ -130,6 +210,13 @@
 			background-color: red;
 			color: white;
 		}
+	}
+
+	&--disabled{
+		border-color: #ddd;
+		color: #ddd;
+		cursor: context-menu;
+
 	}
 }
 

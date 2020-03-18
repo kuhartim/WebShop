@@ -23,9 +23,9 @@ router.post('/', async (req, res) => {
 
 		if(error) return res.status(400).send({ error, message: "Validation error"});
 
-		const news = new News({
-			email: req.body.email
-		});
+		const { email } = req.body;
+
+		const news = new News({ email });
 
 		const savedNews = await news.save();
 
@@ -35,33 +35,11 @@ router.post('/', async (req, res) => {
 
 	catch(err){
 		debug(err);
+		if(err.message.includes("E11000"))
+			res.status(400).send({ message: "Email already exists!" });
 		res.status(500).send('Internal error');
 	}
 })
 
-//if mail already exist
-router.post('/check', async (req, res) => {
-
-	try{
-
-		const { error } = schemaAdd.validate(req.body);
-
-		if(error) return res.status(400).send({ error, message: "Validation error"});
-
-		const { email } = req.body;
-
-		const checkNews = await News.findOne({ email });
-
-		if(!!checkNews) return res.status(400).send({ error, message: "User already exist!"});
-
-		res.send("OK");
-
-	}
-	catch(err){
-		debug(err);
-		res.status(500).send("Internal error");
-	}
-
-});
 
 module.exports = router;
