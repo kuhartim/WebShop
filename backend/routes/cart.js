@@ -43,14 +43,22 @@ router.get('/', auth(), async (req, res) => {
 				productObject.product = result.toObject();
 			}
 			catch(err){
-				productObject.product = {};
+
+				try{
+					await Cart.deleteOne({_id: product.id});
+				}
+				catch(err){
+					debug(err);
+				}
+
+				return null;
 			}
 			return productObject;
 		});
 
 		const cartEntries = await Promise.all(cartPromises);
 
-		return res.send(cartEntries);
+		return res.send(cartEntries.filter(Boolean));
 
 	}
 

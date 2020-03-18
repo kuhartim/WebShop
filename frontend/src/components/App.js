@@ -6,6 +6,7 @@ import Layout from "./partial/Layout";
 import Home from "./Home";
 import Products from "./Products";
 import Product from "./Product";
+import About from "./About";
 import Login from "./Login";
 import Registration from "./Registration";
 import ProductEditor from "./ProductEditor";
@@ -26,6 +27,7 @@ function App() {
 					<Route exact path="/dashboard" component={Dashboard} />
 					<Route exact path="/products/:product" component={Product} />
 					<Route exact path="/products" component={Products} />
+					<Route exact path="/about" component={About} />
 					<Route exact path="/cart" component={Cart} />
 					<Route exact path="/adress" component={Adress} />
 				</Switch>

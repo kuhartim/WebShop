@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useCallback} from "react";
+import {useHistory} from 'react-router-dom';
 import {NotificationManager} from 'react-notifications';
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -86,6 +87,8 @@ function Cart(){
 	const [cart, setCart] = useState([]);
 	const [trigger, setTrigger] = useState(false);
 
+	const history = useHistory();
+
 	useEffect(()=>{
 
 		(async () => {
@@ -114,6 +117,10 @@ function Cart(){
 
 		setCart([]);
 	}, [])
+
+	const next = useCallback(() => {
+		history.push('/adress');
+	}, [history])
 
 
 	return(
@@ -146,9 +153,7 @@ function Cart(){
 			</table>
 			<button className="cart__delete" onClick={deleteAll}>Delete all</button>
 			</div>
-			<div className="cart__arrows">
-
-			</div>
+			<button className="cart__adress" onClick={next}>Adress</button>
 		</div>
 	);
 }

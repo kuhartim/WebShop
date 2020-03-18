@@ -150,7 +150,7 @@ router.post('/:id', auth(true), upload.single('image'), async (req, res) => {
 
 		const { error: errorImage } = schemaImageUpdate.validate(req.file);	
 
-		if(!errorImage){
+		if(!errorImage && req.file){
 
 			const unlink = path => new Promise((resolve, reject) =>{
 					fs.unlink(path, err => err? reject(err):resolve());
@@ -229,6 +229,23 @@ router.delete('/:id', auth(true), async (req, res) => {
 
 		if(req.user.id != product.author) return res.status(403).send({ message: "Unauthorized"});
 
+		const unlink = path => new Promise((resolve, reject) =>{
+			fs.unlink(path, err => err? reject(err):resolve());
+		});
+
+		try{
+				await Promise.all([
+					unlink(path.join(__dirname, `../uploads/${ product.image }_500`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_300`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_200`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }_150`)),
+					unlink(path.join(__dirname, `../uploads/${ product.image }`))
+				]);
+			}
+			catch(err){
+
+			}
+
 		await Product.deleteOne({ _id: id });
 
 		res.send(product);
@@ -294,7 +311,12 @@ router.get('/:id', async (req, res) => {
 
 		if(!product) return res.status(404).send('Not found');
 
-		res.send(product);
+		const {title, description, price, image} = product;
+
+		res.send({
+			id, title, description, price,
+			image: `http://${ config.host }/api/v1/product/image/${image}`
+		});
 
 	}
 	catch(err){

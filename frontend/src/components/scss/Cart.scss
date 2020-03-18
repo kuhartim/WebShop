@@ -53,11 +53,40 @@
 	
 }
 
-.cartEntry{
-	
-}
+.cart__adress{
+	margin-top: 5em;
+	background-color: #289600;
+	border: 2px solid #289600;
+	padding: 1em 3em 1em 2em;
+	border-radius: 2em;
+	font-size: 1.2rem;
+	font-weight: bold;
+	width: auto;
+	color: white;
+	cursor: pointer;
+	transition: background-color .4s, color .4s, border-color .4s;
+	position: relative;
 
-.cartEntry__quantity{
+	&::after{
+		content: "";
+		height: 20px;
+		width: 20px;
+		border-right: 5px solid white;
+		border-bottom: 5px solid white;
+		border-radius: 5px;
+		transform: rotate(-45deg) translateY(-15%);
+		position: absolute;
+		right: 1em;
+	}
+
+	&:hover{
+		background-color: white;
+		color: #289600;
+
+		&::after{
+			border-color: #289600;
+		}
+	}
 }
 
 .cartEntry__buttons{

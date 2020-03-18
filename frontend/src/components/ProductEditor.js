@@ -56,8 +56,6 @@ function ProductEntry({id, title, description, price, setTrigger, isEdit, setNam
 
 function ProductEditor(){
 
-	const [trigger, setTrigger] = useState(false);
-
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [price, setPrice] = useState(0);
@@ -70,6 +68,12 @@ function ProductEditor(){
 	const totalPages = useRef(1);
 	const isEdit = useRef("");
 	const initialProductLoad = useRef(false);
+
+	const [trigger, _setTrigger] = useState(false);
+	const setTrigger = useCallback((value) => {
+		initialProductLoad.current = false;
+		_setTrigger(value);
+	}, [initialProductLoad, _setTrigger]);
 
 	const [disabled, setDisabled] = useState(false);
 

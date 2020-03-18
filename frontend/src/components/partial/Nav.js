@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useContext } from "react";
-import {Link, useHistory } from "react-router-dom";
+import React, { useState, useCallback, useContext, useEffect } from "react";
+import {Link, useLocation } from "react-router-dom";
 
 import withAuth from "./withAuth";
 
@@ -16,18 +16,17 @@ function Nav() {
 
 	const {isLoggedIn} = useContext(SessionContext);
 
-	const history = useHistory();
+	const location = useLocation();
 
 	const onclick = useCallback(e => {
 		e.preventDefault();
 		setOpen(open => !open);
 	}, [setOpen]);
 
-	/*const close = useCallback(e => {
-		e.preventDefault();
-		setOpen(open => false);
-		history.push(this.getAttribute('to'));
-	}, []);*/
+	useEffect(() => {
+		setOpen(false);
+	}, [location, setOpen]);
+
 
 	console.log(isLoggedIn);
 
@@ -40,19 +39,19 @@ function Nav() {
 			</Link>
 			<ul className={`nav__links ${open ? "" : "nav__links--closed"}`}>
 				<li>
-					<Link to="/" title="Home" className="nav__link" /*onClick={close}*/>Home</Link>
+					<Link to="/" title="Home" className="nav__link">Home</Link>
 				</li>
 				<li>
-					<Link to="/products" title="Products" className="nav__link" /*onClick={close}*/>Products</Link>
+					<Link to="/products" title="Products" className="nav__link">Products</Link>
 				</li>
 				<li>
-					<Link to="/about" title="About" className="nav__link" /*onClick={close}*/>About</Link>
+					<Link to="/about" title="About" className="nav__link">About</Link>
 				</li>
 
 				{ isLoggedIn?(
 					<>
 					<li>
-						<Link to="/dashboard" title="Dashboard" className="nav__link" /*onClick={close}*/>Dashboard</Link>
+						<Link to="/dashboard" title="Dashboard" className="nav__link">Dashboard</Link>
 					</li>
 					<li>
 						<Link to="/cart" title="Cart" className="nav__link" /*onClick={close}*/>Cart</Link>
