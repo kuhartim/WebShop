@@ -55,8 +55,8 @@
 
 .cart__adress{
 	margin-top: 5em;
-	background-color: #289600;
-	border: 2px solid #289600;
+	background-color: $color-green;
+	border: 2px solid $color-green;
 	padding: 1em 3em 1em 2em;
 	border-radius: 2em;
 	font-size: 1.2rem;
@@ -81,10 +81,10 @@
 
 	&:hover{
 		background-color: white;
-		color: #289600;
+		color: $color-green;
 
 		&::after{
-			border-color: #289600;
+			border-color: $color-green;
 		}
 	}
 }
@@ -136,21 +136,21 @@
 
 .cartEntry__editButton{
 
-	border-color: #008296;
-	color: #008296;
+	border-color: $color-blue;
+	color: $color-blue;
 
 	&:hover{
 			color: white;
-			background-color: #008296;
+			background-color: $color-blue;
 		}
 
 	&--open{
-		border-color: #289600;
-		color: #289600;
+		border-color: $color-green;
+		color: $color-green;
 
 		&:hover{
 			color: white;
-			background-color: #289600;
+			background-color: $color-green;
 		}
 	} 
 }

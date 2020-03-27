@@ -1,6 +1,6 @@
 @import "./variables";
 
-.adress{
+.payment{
 	height: 100vh;
 	padding-top: 6rem;
 	display: flex;
@@ -9,7 +9,7 @@
 	align-items: center;
 }
 
-.adress__form{
+.payment__form{
 
 	width: 100%;
 
@@ -24,7 +24,15 @@
 	}
 }
 
-.adress__buttons{
+.payment__fieldset{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border: none;
+}
+
+.payment__buttons{
 	margin: 2em 0;
 	width: 35rem;
 	display: flex;
@@ -32,26 +40,8 @@
 	align-items: center;
 }
 
-.adress__fieldset{
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	border: none;
-}
-
-.adress__field{
-	width: 90%;
-	margin: .3em 0;
-	height: 2.5rem;
-	border: 1px solid $color-brand-primary;
-	border-radius: 5em;
-	padding: 0 1em;
-}
-
-.adress__button{
-	margin-top: 5em;
+.payment__button{
+margin-top: 5em;
 	border: 2px solid;
 	padding: 1em 2em 1em 2em;
 	border-radius: 2em;
@@ -63,7 +53,7 @@
 	transition: background-color .4s, color .4s, border-color .4s;
 	position: relative;
 
-	&--payment{
+	&--finish{
 
 		padding-right: 3em;
 		background-color: $color-green;
@@ -91,7 +81,7 @@
 		}
 	}
 
-	&--cart{
+	&--adress{
 
 		padding-left: 3em;
 		background-color: $color-blue;

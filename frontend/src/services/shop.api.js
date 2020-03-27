@@ -106,6 +106,18 @@ export function emptyCart(){
 	return backend.delete('/api/v1/cart').catch(handleUnauthorized);
 }
 
+export function newOrder(firstName, lastName, adress, postalCode, city, phone){
+	return backend.post('/api/v1/order', {firstName, lastName, adress, postalCode, city, phone}).catch(handleUnauthorized);
+}
+
+export function updateOrder(id, paymentMethod){
+	return backend.post(`/api/v1/order/${id}`, {paymentMethod}).catch(handleUnauthorized);
+}
+
+export function readOrder(){
+	return backend.get('/api/v1/order').catch(handleUnauthorized);
+}
+
 export function signUpToNews(email){
 	return backend.post('/api/v1/news', {email}).catch(handleUnauthorized);
 }

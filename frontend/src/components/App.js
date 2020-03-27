@@ -13,6 +13,7 @@ import ProductEditor from "./ProductEditor";
 import Dashboard from "./Dashboard";
 import Cart from "./Cart";
 import Adress from "./Adress";
+import Payment from "./Payment";
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
 					<Route exact path="/about" component={About} />
 					<Route exact path="/cart" component={Cart} />
 					<Route exact path="/adress" component={Adress} />
+					<Route exact path="/payment" component={Payment} />
 				</Switch>
 			</Layout>
 		</BrowserRouter>

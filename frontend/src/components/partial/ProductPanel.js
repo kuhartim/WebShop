@@ -30,7 +30,7 @@ function ProductPanel({ id, title, description, price, image }) {
 				<img src={ `${image}_150` } alt="" className="product-panel__image" />
 			</picture>
 			<h2 className="product-panel__title">{ title }</h2>
-			<p className="product-panel__description">{ description }</p>
+			<p className="product-panel__description">{ description.length > 16 ? description.substring(0, 16) + "..." : description }</p>
 			<span className="product-panel__price">{ price } €</span>
 			<div className="product-panel__overlay">
 				<a href="#" className="product-panel__button product-panel__button--cart" title="Add to Cart" onClick={addCart}>Add to Cart</a>

@@ -311,10 +311,10 @@ router.get('/:id', async (req, res) => {
 
 		if(!product) return res.status(404).send('Not found');
 
-		const {title, description, price, image} = product;
+		const {name, description, price, image} = product;
 
 		res.send({
-			id, title, description, price,
+			id, name, description, price,
 			image: `http://${ config.host }/api/v1/product/image/${image}`
 		});
 
