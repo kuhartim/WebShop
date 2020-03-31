@@ -14,6 +14,8 @@ import Dashboard from "./Dashboard";
 import Cart from "./Cart";
 import Adress from "./Adress";
 import Payment from "./Payment";
+import Finish from "./Finish";
+import Order from "./Order";
 
 function App() {
 
@@ -32,6 +34,8 @@ function App() {
 					<Route exact path="/cart" component={Cart} />
 					<Route exact path="/adress" component={Adress} />
 					<Route exact path="/payment" component={Payment} />
+					<Route exact path="/finish" component={Finish} />
+					<Route exact path="/order/:order" component={Order} />
 				</Switch>
 			</Layout>
 		</BrowserRouter>

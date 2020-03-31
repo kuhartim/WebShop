@@ -102,6 +102,10 @@ export function deleteCartProduct(id){
 	return backend.delete(`/api/v1/cart/${id}`).catch(handleUnauthorized);
 }
 
+export function deleteCart(){
+	return backend.delete('/api/v1/cart').catch(handleUnauthorized);
+}
+
 export function emptyCart(){
 	return backend.delete('/api/v1/cart').catch(handleUnauthorized);
 }
@@ -114,8 +118,24 @@ export function updateOrder(id, paymentMethod){
 	return backend.post(`/api/v1/order/${id}`, {paymentMethod}).catch(handleUnauthorized);
 }
 
-export function readOrder(){
-	return backend.get('/api/v1/order').catch(handleUnauthorized);
+export function updateOrderStatus(id, status){
+	return backend.post(`/api/v1/order/status/${id}`, {status}).catch(handleUnauthorized);
+}
+
+export function readOrder(status){
+	return backend.get(`/api/v1/order?status=${status}`).catch(handleUnauthorized);
+}
+
+export function readOrderById(id){
+	return backend.get(`/api/v1/order/order/${id}`).catch(handleUnauthorized);
+}
+
+export function allOrders(){
+	return backend.get('/api/v1/order/all').catch(handleUnauthorized);
+}
+
+export function deleteOrder(id){
+	return backend.delete(`/api/v1/order/${id}`).catch(handleUnauthorized);
 }
 
 export function signUpToNews(email){
@@ -124,6 +144,14 @@ export function signUpToNews(email){
 
 export function newsMailCheck(email){
 	return backend.post('/api/v1/news/check', {email}).catch(handleUnauthorized);
+}
+
+export function readNews(){
+	return backend.get('/api/v1/news').catch(handleUnauthorized);
+}
+
+export function deleteNews(id){
+	return backend.delete(`/api/v1/news/${id}`).catch(handleUnauthorized);
 }
 
 function handleUnauthorized(err){

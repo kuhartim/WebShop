@@ -1,15 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useHistory} from 'react-router-dom';
 import {NotificationManager} from 'react-notifications';
 import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
 
 import CardSection from './CardSection';
 
+import { OrderContext } from "./OrderContext";
+
+import {updateOrderStatus as apiStatus} from "../../services/shop.api";
+
+import "./scss/StripeCheckoutForm.scss";
+
 export default function CheckoutForm({secret}) {
   const stripe = useStripe();
   const elements = useElements();
 
   const history = useHistory();
+
+  const orderContext = useContext(OrderContext);
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -26,7 +34,7 @@ export default function CheckoutForm({secret}) {
       payment_method: {
         card: elements.getElement(CardElement),
         billing_details: {
-          name: 'Jenny Rosen',
+          name: orderContext.order.firstName + " " + orderContext.order.lastName
         },
       }
     });
@@ -43,6 +51,13 @@ export default function CheckoutForm({secret}) {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
+        apiStatus(orderContext.order._id, "processing")
+        .then(() => {
+          NotificationManager.success("Order completed", "Success");
+        })
+        .catch(() => {
+          NotificationManager.error("Something went wrong during status update, please contact us", "Error");
+        })
         history.push('/finish');
       }
 
@@ -51,9 +66,9 @@ export default function CheckoutForm({secret}) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="stripe__form">
       <CardSection />
-      <button disabled={!stripe}>Confirm order</button>
+      <button disabled={!stripe} className="stripe__button">Confirm order</button>
     </form>
   );
 }

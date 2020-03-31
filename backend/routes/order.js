@@ -44,6 +44,12 @@ const schemaUpdate = Joi.object({
 					  .required()
 });
 
+const schemaUpdateStatus = Joi.object({
+
+	status: Joi.valid("created", "waitingForPayment", "processing", "shipped", "delivered")
+					  .required()
+});
+
 //add
 router.post('/', auth(), async (req, res) => {
 
@@ -67,21 +73,40 @@ router.post('/', auth(), async (req, res) => {
 			};
 		}));
 
+		let currentOrder = await Order.findOne({user: req.user.id, status: "created"});
 
-		const order = new Order({
-			user: req.user.id,
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			adress: req.body.adress,
-			postalCode: req.body.postalCode,
-			city: req.body.city,
-			phone: req.body.phone,
-			products
-		});
+		let savedOrder;
 
-		const savedOrder = await order.save();
+		if(currentOrder){
+				currentOrder.firstName = req.body.firstName;
+				currentOrder.lastName = req.body.lastName;
+				currentOrder.adress = req.body.adress;
+				currentOrder.postalCode = req.body.postalCode;
+				currentOrder.city = req.body.city;
+				currentOrder.phone = req.body.phone;
+				currentOrder.products = products;
+			
+
+			savedOrder = await currentOrder.save();
+
+		}
+		else{
+			const order = new Order({
+				user: req.user.id,
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
+				adress: req.body.adress,
+				postalCode: req.body.postalCode,
+				city: req.body.city,
+				phone: req.body.phone,
+				products
+			});
+
+			savedOrder = await order.save();
+		}
 
 		return res.send(savedOrder);
+
 
 	}
 	catch(err){
@@ -106,6 +131,7 @@ router.post('/:id', auth(), async (req, res) => {
 		if(!order) return res.status(404).send('Not found');
 
 		order.paymentMethod = req.body.paymentMethod;
+		if(req.body.paymentMethod != "stripe")
 		order.status = "waitingForPayment";
 
 		let stripeSecret = null;
@@ -134,14 +160,46 @@ router.post('/:id', auth(), async (req, res) => {
 	}
 })
 
-//read
-router.get('/', auth(), async (req, res) => {
+//update status
+router.post('/status/:id', auth(true), async(req, res) => {
 
 	try{
 
-		const order = await Order.findOne({user: req.user.id, status: "created"});
+		const { error } = schemaUpdateStatus.validate(req.body);
 
-		res.send({ order });
+		if(error) return res.status(400).send({ error, message: "Validation error"});
+
+		const { id } = req.params;
+
+		const order = await Order.findById(id);
+
+		if(!order) return res.status(404).send('Not found');
+
+		order.status = req.body.status;
+
+		const savedOrder = await order.save();
+
+		res.send(savedOrder);
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+})
+
+//read id
+router.get('/order/:id', auth(), async (req, res) => {
+
+	try{
+
+		const { id } = req.params;
+
+		const order = await Order.findById(id);
+
+		if(!order) return res.status(404).send('Not found');
+
+		res.send(order);
 
 	}
 	catch(err){
@@ -149,6 +207,64 @@ router.get('/', auth(), async (req, res) => {
 		res.status(500).send('Internal error');
 	}
 });
+
+
+//read
+router.get('/', auth(), async (req, res) => {
+
+	try{
+
+		const status = req.query.status;
+
+		const order = await Order.findOne({user: req.user.id, status});
+
+		res.send({order});
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+});
+
+//read all
+router.get('/all', auth(true), async(req, res) => {
+
+	try{
+
+		const orders = await Order.find();
+
+		res.send(orders);
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+});
+
+//delete
+router.delete('/:id', auth(true), async (req, res) => {
+
+	try{
+
+		const { id } = req.params;
+
+		const order = await Order.findById(id);
+
+		if(!order) return res.status(404).send('Not found');
+
+		await Order.deleteOne({_id: id});
+
+		res.send("Deleted");
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+
+})
 
 
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require('@hapi/joi');
 
 const News = require('../src/models/news.model');
+const auth = require('../src/middleware/auth');
 
 const debug = require('debug')('backend:newsrouter');
 
@@ -39,7 +40,44 @@ router.post('/', async (req, res) => {
 			res.status(400).send({ message: "Email already exists!" });
 		res.status(500).send('Internal error');
 	}
-})
+});
+
+//read all
+router.get('/', auth(true), async (req, res) => {
+
+	try{
+
+		const news = await News.find();
+
+		res.send(news);
+
+	}
+
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+});
+
+//delete
+router.delete('/:id', auth(true), async (req, res) => {
+
+	try{
+
+		const { id } = req.params;
+
+		await News.deleteOne({_id: id});
+
+		res.send("Deleted");
+
+	}
+
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+
+});
 
 
 module.exports = router;

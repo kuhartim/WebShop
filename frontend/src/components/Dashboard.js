@@ -59,7 +59,7 @@ function Dashboard(){
 			{
 				isAdmin ? (
 					<div className="dashboard__adminPanel">
-						<h1>Admin panel</h1>
+						<h1 className="dashboard__adminTitle">Admin panel</h1>
 						<ProductEditor />
 					</div>
 				):(

@@ -1,4 +1,5 @@
 import React, {useEffect, useContext, useRef} from "react";
+import {useLocation} from "react-router-dom";
 
 import {OrderContext} from "./OrderContext";
 
@@ -12,14 +13,17 @@ function withCurrentOrder(Component){
 
 		const loading = useRef(true);
 
+		const location = useLocation();
+
 		useEffect(() => {
 
 			if(!loading.current) return;
 			
-			readOrder()
+			readOrder(location.pathname == "/finish" ? "waitingForPayment" : "created")
 			.then(({data}) => {
 				orderContext.setOrder(data.order);
 				loading.current = false;
+				console.log(orderContext);
 			})
 			.catch(err => {
 				console.log(err);

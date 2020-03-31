@@ -50,7 +50,7 @@ function Product({ match: { params: { product: id } } }){
 			})
 		}
 		else{
-			console.log(Number.isInteger(quantity));
+			NotificationManager.error("Quantity is unknown!", "Error");
 		}
 	}, [id, quantity]);
 
@@ -84,7 +84,7 @@ function Product({ match: { params: { product: id } } }){
 							productObject.description
 						}
 						</span>
-						<input type="number" placeholder="quantity" name="quantity" className="product__input" onChange={onQuantityChange} required />
+						<input type="number" placeholder="quantity..." name="quantity" className="product__input" onChange={onQuantityChange} required />
 						<button className="product__toCart" onClick={addCart}>Add to cart</button>
 					</div>
 				</div>

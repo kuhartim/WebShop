@@ -119,8 +119,13 @@ function Cart(){
 	}, [])
 
 	const next = useCallback(() => {
+		console.log(cart);
+		if(cart.length < 1){
+			NotificationManager.error("Cart is empty!", "Error");
+			return;
+		}
 		history.push('/adress');
-	}, [history])
+	}, [history, cart])
 
 
 	return(

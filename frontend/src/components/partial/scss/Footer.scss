@@ -71,3 +71,19 @@
 		background-color: transparent;
 	}
 }
+
+@media (max-width: 400px){
+
+	.footer__fieldset{
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr 1fr;
+		width: 90%;
+	}
+
+	.footer__button{
+		grid-column: 1/2;
+		grid-row: 2/3;
+		width: 50%;
+		margin-top: 1em;
+	}
+}

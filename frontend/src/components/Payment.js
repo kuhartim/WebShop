@@ -47,10 +47,11 @@ function Payment(){
 
 		updateOrder(orderContext.order._id, paymentMethod)
 		.then(({data: {stripeSecret}}) => {
-			NotificationManager.success("Order Completed!", "Success");
 			setDisabled(false);
-			if(!stripeSecret)
+			if(!stripeSecret){
+				NotificationManager.success("Order Completed!", "Success");
 				history.push('/finish');
+			}
 			setStripe(stripeSecret);
 		})
 		.catch(() => {
@@ -63,6 +64,8 @@ function Payment(){
 	const prev = useCallback(() => {
 		history.push('/adress');
 	}, [history])
+
+	console.log(orderContext.order);
 	
 
 	return(

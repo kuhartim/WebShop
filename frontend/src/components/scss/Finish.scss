@@ -1,0 +1,35 @@
+@import "./variables";
+
+.finish{
+	height: 100vh;
+	padding-top: 6rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.finish__text{
+	font-size: 1.5em;
+	margin-right: .5em;
+}
+
+.finish__button{
+	height: 2.3rem;
+	background-color: transparent;
+	border: 2px solid;
+	border-radius: 2.5rem;
+	transition: color .4s, background-color .4s;
+	margin: .2em;
+	font-weight: bold;
+	padding: 0 1em;
+	cursor: pointer;
+	border-color: $color-blue;
+	color: $color-blue;
+
+	&:hover{
+		color: white;
+		background-color: $color-blue;
+	}
+
+}

@@ -2,7 +2,7 @@
 
 .products{
 	padding-top: 5rem;
-	height: 100vh;
+	min-height: 100vh;
 }
 
 .products__list{
@@ -14,19 +14,19 @@
 }
 
 @media (max-width: 1050px){
-	.products{
+	.products__list{
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
 
 @media (max-width: 800px){
-	.products{
+	.products__list{
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
 @media (max-width: 550px){
-	.products{
-		grid-template-columns: repeat(1, 1fr);
+	.products__list{
+		grid-template-columns: 1fr;
 	}
 }

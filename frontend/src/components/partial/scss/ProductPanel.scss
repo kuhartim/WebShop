@@ -1,17 +1,60 @@
 @import "../../scss/variables";
 
 .product-panel{
-	max-width: 100%;
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	&:hover .product-panel__overlay{
+		z-index: 2;
+		opacity: 1;
+	}
+}
+
+.product-panel__front{
 	overflow-wrap: break-word;
  	word-wrap: break-word;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	backface-visibility: hidden;
 	background-color: $color-accent-secondary;
+	width: 100%;
+	height: 100%;
 	border-radius: 2%;
 	padding: 1.5rem;
-	position: relative;
+	transform: rotateY(0deg);
+
+	&--turn{
+
+		transform: perspective(600px) rotateY(180deg);
+		animation: front .6s linear;
+
+		@keyframes front{
+			0%{
+				transform: perspective(600px) rotateY(0deg);
+			}
+			100%{
+				transform: perspective(600px) rotateY(180deg);
+			}
+		}
+	}
+
+	&--unturn{
+
+		transform: perspective(600px) rotateY(0deg);
+		animation: front2 .6s linear;
+
+		@keyframes front2{
+			0%{
+				transform: perspective(600px) rotateY(-180deg);
+			}
+			100%{
+				transform: perspective(600px) rotateY(0deg);
+			}
+		}
+	}
 }
 
 .product-panel__img{
@@ -50,9 +93,40 @@
 	justify-content: center;
 	align-items: center;
 	transition: opacity .2s ease-out;
+	z-index: -1;
+	backface-visibility: hidden;
 
-	&:hover{
+	&--turn{
+
+		transform: perspective(600px) rotateY(0deg);
+		z-index: 2;
 		opacity: 1;
+		animation: back .6s linear;
+
+		@keyframes back{
+			0%{
+				transform: perspective(600px) rotateY(-180deg);
+			}
+			100%{
+				transform: perspective(600px) rotateY(0deg);
+			}
+		}
+	}
+
+	&--unturn{
+		transform: perspective(600px) rotateY(180deg);
+		z-index: 2;
+		opacity: 1;
+		animation: back2 .6s linear;
+
+		@keyframes back2{
+			0%{
+				transform: perspective(600px) rotateY(0deg);
+			}
+			100%{
+				transform: perspective(600px) rotateY(180deg);
+			}
+		}
 	}
 }
 
@@ -65,6 +139,7 @@
 	border-radius: .2rem;
 	width: 75%;
 	text-align: center;
+	cursor: pointer;
 
 	&--cart{
 		background-color: green;
@@ -83,6 +158,17 @@
 		&:hover{
 			background-color: white;
 			color: black;
+		}
+	}
+
+	&--turn{
+		background-color: $color-blue;
+		border: 3px solid $color-blue;
+		transition: background-color .2s ease-out;
+
+		&:hover{
+			background-color: transparent;
+			color: $color-blue;
 		}
 	}
 }

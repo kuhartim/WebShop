@@ -1,0 +1,27 @@
+@import "../../scss/variables";
+
+.stripe__form{
+	width: 100%;
+	display: grid;
+}
+
+.stripe__button{
+
+	cursor: pointer;
+	height: 2rem;
+	width: 40%;
+	background-color: $color-green;
+	color: white; 
+	border: none;
+	border-radius: 2rem;
+	transition: color .4s, background-color .4s;
+	font-weight: bold;
+	margin: auto;
+	margin-top: 1em;
+
+	&:hover{
+		border: 2px solid $color-green;
+		color: $color-green;
+		background-color: white;
+	}
+}

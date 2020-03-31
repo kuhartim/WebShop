@@ -2,7 +2,7 @@ import React, { useState, useCallback, useContext, useEffect } from "react";
 import {useHistory} from "react-router-dom";
 import {NotificationManager} from 'react-notifications';
 
-import {newOrder} from "../services/shop.api";
+import {newOrder, readOrder} from "../services/shop.api";
 
 import withCurrentOrder from "./partial/withCurrentOrder";
 
@@ -34,12 +34,29 @@ function Adress(){
 
 	const orderContext = useContext(OrderContext);
 
+	useEffect(() => {
+
+		readOrder("created")
+		.then(({data: {order}}) => {
+			setFirstName(order.firstName);
+			setLastName(order.lastName);
+			setAdress(order.adress);
+			setPost(order.postalCode);
+			setCity(order.city);
+			setPhone(order.phone);
+		})
+		.catch(() => {
+			console.log("no existing order");
+		})
+
+	}, [setFirstName, setLastName, setAdress, setPost, setCity, setPhone]);
+
 	const next = useCallback(() => {
 
 		setDisabled(true);
 
 		newOrder(firstName, lastName, adress, post, city, phone)
-		.then((order) => {
+		.then(({data: order}) => {
 			NotificationManager.success("Adress saved!", "success");
 			setDisabled(false);
 			orderContext.setOrder(order);
@@ -53,7 +70,22 @@ function Adress(){
 	}, [orderContext, history, firstName, lastName, adress, post, city, phone, setDisabled]);
 
 	const prev = useCallback(() => {
-		history.push('/cart');
+
+		setDisabled(true);
+
+		newOrder(firstName, lastName, adress, post, city, phone)
+		.then(({data: order}) => {
+			NotificationManager.success("Adress saved!", "success");
+			setDisabled(false);
+			orderContext.setOrder(order);
+			history.push('/cart');
+		})
+		.catch(() => {
+			NotificationManager.warning("You must fill all required inputs to save it!", "Warning");
+			setDisabled(false);
+			history.push('/cart');
+		})
+		
 	}, [history]);
 
 	return(
@@ -63,11 +95,11 @@ function Adress(){
 			<div className="adress__form--wrap">
 			<form method="POST" className="adress__form">
 				<fieldset disabled={disabled} className="adress__fieldset">
-					<input type="text" className="adress__field" name="firstName" placeholder="First name" value={firstName} onChange={onFirstNameChange}/>
-					<input type="text" className="adress__field" name="lastName" placeholder="Last name" value={lastName} onChange={onLastNameChange}/>
-					<input type="text" className="adress__field" name="adress" placeholder="Adress" value={adress} onChange={onAdressChange}/>
-					<input type="number" className="adress__field" name="post" placeholder="Postal code" value={post} onChange={onPostChange}/>
-					<input type="text" className="adress__field" name="city" placeholder="City" value={city} onChange={onCityChange}/>
+					<input type="text" className="adress__field" name="firstName" placeholder="*First name" value={firstName} onChange={onFirstNameChange}/>
+					<input type="text" className="adress__field" name="lastName" placeholder="*Last name" value={lastName} onChange={onLastNameChange}/>
+					<input type="text" className="adress__field" name="adress" placeholder="*Adress" value={adress} onChange={onAdressChange}/>
+					<input type="number" className="adress__field" name="post" placeholder="*Postal code" value={post} onChange={onPostChange}/>
+					<input type="text" className="adress__field" name="city" placeholder="*City" value={city} onChange={onCityChange}/>
 					<input type="tel" className="adress__field" name="phone" placeholder="Phone" value={phone} onChange={onPhoneChange}/>
 				</fieldset>
 			</form>

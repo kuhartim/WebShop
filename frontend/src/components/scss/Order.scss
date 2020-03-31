@@ -1,0 +1,64 @@
+@import "./variables";
+
+.order{
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.order__wrap{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 2rem;
+	border: none;
+	box-shadow: 5px 5px 20px #858585;
+	padding: 2em 1em;
+}
+
+.order__button{
+	background-color: white;
+	margin: 1em auto;
+	height: 1.4rem;
+	padding: 0 1em;
+	border: 1px solid;
+	border-radius: 1.4rem;
+	font-size: .9em;
+	font-weight: bold;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-color: $color-green;
+	color: $color-green;
+	transition: .4s;
+	cursor: pointer;
+
+		&:hover{
+			background-color: $color-green;
+			color: white;
+		}
+
+		&--disabled{
+			border-color: #aaa;
+			color: #aaa;
+			cursor: auto;
+
+			&:hover{
+				background-color: white;
+				color: #aaa;
+			}
+		}
+
+		&--delete{
+			border-color: $color-red;
+			color: $color-red;
+
+			&:hover{
+				background-color: $color-red;
+				color: white;
+			}
+		}
+}

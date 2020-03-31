@@ -1,13 +1,88 @@
 import React, { useState, useCallback, useRef, useEffect, useContext } from "react";
 import {Link, useHistoty} from "react-router-dom";
 
-import { publish as apiPublish, listProducts, deleteAllProducts, deleteOneProduct, updateProduct as apiUpdate, findProduct } from "../services/shop.api";
+import { publish as apiPublish, listProducts, deleteAllProducts, deleteOneProduct, updateProduct as apiUpdate, findProduct, allOrders, readNews, deleteNews } from "../services/shop.api";
 import {NotificationManager} from 'react-notifications';
 
 import withAuth from "./partial/withAuth";
 
 
 import "./scss/ProductEditor.scss";
+
+function NewsEntry({_id, email, setTrigger}){
+
+	const [loading, setLoading] = useState(false);
+
+	const deleteThisMail = useCallback(() => {
+
+		if(loading) return;
+
+		setLoading(true);
+
+		deleteNews(_id)
+		.then(() => {
+			NotificationManager.success("Successfully deleted!", "Success");
+			setLoading(false);
+			setTrigger(trigger => !trigger);
+		})
+		.catch(() => {
+			NotificationManager.error("Couldn't delete this mail!", "Error");
+			setLoading(false);
+		})
+
+	}, [setLoading, loading, _id, setTrigger]);
+
+	return (
+		<tr>
+			<td className="news-entry__field">
+				{
+					email.length > 30 ? email.substring(0, 30) + "..." : email
+				}
+			</td>
+			<td>
+				<button className="product-entry__button product-entry__button--delete" onClick={deleteThisMail}>Delete</button>
+			</td>
+		</tr>
+	);
+}
+
+function OrderEntry({_id, firstName, lastName, adress, paymentMethod,status}){
+
+	const size = useWindowSize();
+
+	return (
+		<tr>
+			<td className="order-entry__field">
+				{
+					firstName.length > 15 ? firstName.substring(0, 15) + "..." : firstName
+				}
+			</td>
+			<td className="order-entry__field">
+				{
+					lastName.length > 15 ? lastName.substring(0, 15) + "..." : lastName
+				}
+			</td>
+			<td className="order-entry__field" hidden={size.width < 570 ? true : false}>
+				{
+					adress.length > 15 ? adress.substring(0, 15) + "..." : adress
+				}
+			</td>
+			<td className="order-entry__field">
+				{
+					paymentMethod
+				}
+			</td>
+			<td className="order-entry__field">
+				{
+					status
+				}
+			</td>
+			<td>
+				<Link to={`/order/${_id}`} className="order-entry__button">View</Link>
+			</td>
+		</tr>
+	);
+}
 
 
 function ProductEntry({id, title, description, price, setTrigger, isEdit, setName, setDescription, setPrice}){
@@ -35,18 +110,18 @@ function ProductEntry({id, title, description, price, setTrigger, isEdit, setNam
 
 	return (
 		<tr>
-			<td>
+			<td className="product-entry__field">
 				{title}
 			</td>
-			<td>
+			<td className="product-entry__field">
 				{
 					description.length > 15 ? description.substring(0, 15) + "..." : description
 				}
 			</td>
-			<td>
+			<td className="product-entry__field">
 				{price}€
 			</td>
-			<td className="product-entry__field">
+			<td className="product-entry__fieldButton">
 				<button className={`product-entry__button ${isEdit.current ? "product-entry__button--disabled" : "product-entry__button--edit"}`} onClick={edit}>Edit</button>
 				<button className="product-entry__button product-entry__button--delete" onClick={deleteProduct}>Delete</button>
 			</td>
@@ -65,6 +140,12 @@ function ProductEditor(){
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
 
+	const [orders, setOrders] = useState([]);
+	const [loadingOrders, setLoadingOrders] = useState(false);
+
+	const [news, setNews] = useState([]);
+	const [loadingNews, setLoadingNews] = useState(false);
+
 	const totalPages = useRef(1);
 	const isEdit = useRef("");
 	const initialProductLoad = useRef(false);
@@ -76,6 +157,8 @@ function ProductEditor(){
 	}, [initialProductLoad, _setTrigger]);
 
 	const [disabled, setDisabled] = useState(false);
+
+	const size = useWindowSize();
 
 	const onNameChange = useCallback(({ target: {value} }) => setName(value), [setName]);
 	const onDescriptionChange = useCallback(({ target: {value}}) => setDescription(value), [setDescription]);
@@ -149,7 +232,37 @@ function ProductEditor(){
 				setLoading(false);
 			});
 
-	}, [page, setLoading, loading, totalPages, setProducts, trigger]);
+		if(loadingOrders) return;
+
+		setLoadingOrders(true);
+
+		allOrders()
+			.then(({data}) => {
+				setOrders(data);
+				setLoadingOrders(false);
+			})
+			.catch((err) => {
+				console.error(err);
+				NotificationManager.error("Couldn't load orders", "Error");
+				setLoadingOrders(false);
+			});
+
+		if(loadingNews) return;
+
+		setLoadingNews(true);
+
+		readNews()
+			.then(({data}) => {
+				setNews(data);
+				setLoadingNews(false);
+			})
+			.catch((err) => {
+				console.error(err);
+				NotificationManager.error("Couldn't load news", "Error");
+				setLoadingNews(false);
+			});
+
+	}, [page, setLoading, loading, totalPages, setProducts, trigger, loadingOrders, setLoadingOrders, orders, setOrders]);
 
 
 	const deleteAll = useCallback(() => {
@@ -172,8 +285,13 @@ function ProductEditor(){
 		setPrice(0);
 	}, [isEdit, setName, setDescription, setPrice])
 
+	console.log(window.width);
+
 	return(
 		<>
+		<div className="product-editor__actionButtons">
+			<button className={`product-editor__cancleProduct ${isEdit.current ? "product-editor__cancleProduct--active" : ""}`} onClick={cancleEdit}>Cancle</button>
+		</div>
 		<div className="product-editor">
 				<form method="POST">
 					<fieldset className="product-editor__fieldset" disabled = { disabled } >
@@ -191,35 +309,143 @@ function ProductEditor(){
 							<table className="product-editor__productTable">
 								<thead className="product-editor__productTable--head">
 									<tr>
-										<th>
+										<th className="product-entry__field">
 											Product
 										</th>
-										<th>
+										<th className="product-entry__field">
 											description
 										</th>
-										<th>
+										<th className="product-entry__field">
 											Price
 										</th>
-										<th>
+										<th className="product-entry__field">
 											
 										</th>
 									</tr>
 								</thead>
 								<tbody className="product-editor__productTable--body">
 								{
-									products.map((product, i) => <ProductEntry key={product.id} {...product} setTrigger={setTrigger} isEdit={isEdit} setName={setName} setDescription={setDescription} setPrice={setPrice}/>)
+									products.map((product) => <ProductEntry key={product.id} {...product} setTrigger={setTrigger} isEdit={isEdit} setName={setName} setDescription={setDescription} setPrice={setPrice}/>)
 								}	
 								</tbody>
 							</table>
 						</div>
 					<button className="product-editor__button" onClick={deleteAll}>Delete all</button>
 				</div>
-		</div>
-		<div className="product-editor__actionButtons">
-			<button className={`product-editor__cancleProduct ${isEdit.current ? "product-editor__cancleProduct--active" : ""}`} onClick={cancleEdit}>Cancle</button>
+				<div className="product-editor__orders">
+				<span className="product-editor__title">Orders</span>
+						<div className="product-editor__tableWrap">
+							<table className="product-editor__orderTable">
+								<thead className="product-editor__orderTable--head">
+									<tr>
+										<th className="product-entry__field">
+											First name
+										</th>
+										<th className="product-entry__field">
+											Last name
+										</th>
+										<th className="product-entry__field" hidden={size.width < 570 ? true : false}>
+											Adress
+										</th>
+										<th className="product-entry__field">
+											Payment method
+										</th>
+										<th className="product-entry__field">
+											Status
+										</th>
+										<th className="product-entry__field">
+
+										</th>
+									</tr>
+								</thead>
+								<tbody className="product-editor__orderTable--body">
+								{
+									orders.map((order) => <OrderEntry key={order._id} {...order} />)
+								}	
+								</tbody>
+							</table>
+						</div>
+				</div>
+				<div className="product-editor__news">
+				<span className="product-editor__title">Orders</span>
+						<div className="product-editor__tableWrap">
+							<table className="product-editor__newsTable">
+								<thead className="product-editor__newsTable--head">
+									<tr>
+										<th className="product-entry__field">
+											Mail
+										</th>
+										<th className="product-entry__field">
+
+										</th>
+									</tr>
+								</thead>
+								<tbody className="product-editor__newsTable--body">
+								{
+									news.map((newsObject) => <NewsEntry key={news._id} setTrigger={setTrigger} {...newsObject} />)
+								}	
+								</tbody>
+							</table>
+						</div>
+					<button className="product-editor__button" >Delete all</button>
+				</div>
 		</div>
 		</>
 	);
+}
+
+function useWindowSize() {
+
+  const isClient = typeof window === 'object';
+
+
+
+  function getSize() {
+
+    return {
+
+      width: isClient ? window.innerWidth : undefined,
+
+      height: isClient ? window.innerHeight : undefined
+
+    };
+
+  }
+
+
+
+  const [windowSize, setWindowSize] = useState(getSize);
+
+
+
+  useEffect(() => {
+
+    if (!isClient) {
+
+      return false;
+
+    }
+
+    
+
+    function handleResize() {
+
+      setWindowSize(getSize());
+
+    }
+
+
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+
+  }, []); // Empty array ensures that effect is only run on mount and unmount
+
+
+
+  return windowSize;
+
 }
 
 export default ProductEditor;
