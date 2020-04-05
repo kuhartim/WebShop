@@ -4,7 +4,7 @@ import {NotificationManager} from 'react-notifications';
 
 import CartProgress from "./partial/CartProgress";
 
-import {deleteCart} from "../services/shop.api";
+import {deleteCart, updateOrderStatus as apiStatus} from "../services/shop.api";
 
 import withCurrentOrder from "./partial/withCurrentOrder";
 
@@ -22,7 +22,16 @@ function Finish(){
 
 		if(!orderContext.order){
 			history.push('/cart');
-			return;
+		}
+
+		if(orderContext.order.paymentMethod == "stripe"){
+			apiStatus(orderContext.order._id, "processing")
+        	.then(() => {
+          		NotificationManager.success("Order completed", "Success");
+	        })
+	        .catch(() => {
+	          	NotificationManager.error("Something went wrong during status update, please contact us", "Error");
+	        })
 		}
 
 		deleteCart()

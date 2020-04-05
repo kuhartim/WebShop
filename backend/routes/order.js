@@ -232,7 +232,7 @@ router.get('/all', auth(true), async(req, res) => {
 
 	try{
 
-		const orders = await Order.find();
+		const orders = await Order.find().sort("-create");
 
 		res.send(orders);
 

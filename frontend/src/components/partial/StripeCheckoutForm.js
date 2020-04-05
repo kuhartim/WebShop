@@ -7,8 +7,6 @@ import CardSection from './CardSection';
 
 import { OrderContext } from "./OrderContext";
 
-import {updateOrderStatus as apiStatus} from "../../services/shop.api";
-
 import "./scss/StripeCheckoutForm.scss";
 
 export default function CheckoutForm({secret}) {
@@ -51,13 +49,7 @@ export default function CheckoutForm({secret}) {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
-        apiStatus(orderContext.order._id, "processing")
-        .then(() => {
-          NotificationManager.success("Order completed", "Success");
-        })
-        .catch(() => {
-          NotificationManager.error("Something went wrong during status update, please contact us", "Error");
-        })
+
         history.push('/finish');
       }
 

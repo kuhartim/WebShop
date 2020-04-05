@@ -33,3 +33,17 @@
 	}
 
 }
+
+@media (max-width: 550px){
+
+	.finish__text--wrap{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.finish__button{
+		margin-top: 1em;
+	}
+}

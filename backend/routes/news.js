@@ -11,6 +11,7 @@ const schemaAdd = Joi.object({
 
 	email: Joi.string()
 				.email({ minDomainSegments: 2 })
+				.max(256)
 				.required()
 
 });
@@ -47,9 +48,21 @@ router.get('/', auth(true), async (req, res) => {
 
 	try{
 
-		const news = await News.find();
+		const page = Number(req.query.page) || 1;
+		const perPage = Number(req.query.perPage) || 10;
 
-		res.send(news);
+		debug(req.query.page);
+		debug(req.query.perPage);
+
+		const numberAll = await News.countDocuments();
+
+		if(Math.ceil(numberAll / perPage) < page || page < 1 || numberAll == 0) res.status(404).send({ message: "Not found" });
+
+		const news = await News.find().sort("-create").skip((page-1) * perPage).limit(perPage);
+
+		debug(news);
+
+		res.send({news, page, numberAll: Math.ceil(numberAll / perPage)});
 
 	}
 
@@ -67,6 +80,24 @@ router.delete('/:id', auth(true), async (req, res) => {
 		const { id } = req.params;
 
 		await News.deleteOne({_id: id});
+
+		res.send("Deleted");
+
+	}
+
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+
+});
+
+//delete all
+router.delete('/', auth(true), async (req, res) => {
+
+	try{
+
+		await News.deleteMany({});
 
 		res.send("Deleted");
 

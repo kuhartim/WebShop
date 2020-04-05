@@ -9,7 +9,6 @@ import Product from "./Product";
 import About from "./About";
 import Login from "./Login";
 import Registration from "./Registration";
-import ProductEditor from "./ProductEditor";
 import Dashboard from "./Dashboard";
 import Cart from "./Cart";
 import Adress from "./Adress";

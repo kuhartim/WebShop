@@ -1,7 +1,7 @@
 @import "./variables";
 
 .payment{
-	height: 100vh;
+	min-height: 100vh;
 	padding-top: 6rem;
 	display: flex;
 	flex-direction: column;
@@ -105,6 +105,51 @@ margin-top: 5em;
 
 			&::before{
 				border-color: $color-blue;
+			}
+		}
+	}
+}
+
+@media (max-width: 600px){
+
+	.payment__form--wrap{
+		width: 90%;
+	}
+
+	.payment__buttons{
+		width: 90%;
+	}
+}
+
+@media (max-width: 400px){
+	.payment__button{
+		margin-top: 5em;
+		padding: .5em 1em;
+		font-size: .9rem;
+
+		&--finish{
+
+			padding-right: 2.5em;
+
+			&::after{
+				width: 10px;
+				height: 10px;
+				right: .5em;
+				top: 50%;
+				transform: rotate(-45deg) translateY(-70%);
+			}
+		}
+
+		&--adress{
+
+			padding-left: 2.5em;
+
+			&::before{
+				width: 10px;
+				height: 10px;
+				left: .5em;
+				top: 50%;
+				transform: rotate(45deg) translateY(-70%);
 			}
 		}
 	}

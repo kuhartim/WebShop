@@ -70,7 +70,7 @@ export function updateProduct(id, name, description, price, image){
 
 }
 
-export function listProducts(page, perPage=20){
+export function listProducts(page, perPage=10){
 	return backend.get(`/api/v1/product?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
 }
 
@@ -146,12 +146,16 @@ export function newsMailCheck(email){
 	return backend.post('/api/v1/news/check', {email}).catch(handleUnauthorized);
 }
 
-export function readNews(){
-	return backend.get('/api/v1/news').catch(handleUnauthorized);
+export function readNews(page, perPage=10){
+	return backend.get(`/api/v1/news?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
 }
 
 export function deleteNews(id){
 	return backend.delete(`/api/v1/news/${id}`).catch(handleUnauthorized);
+}
+
+export function deleteAllNews(){
+	return backend.delete('/api/v1/news').catch(handleUnauthorized);
 }
 
 function handleUnauthorized(err){

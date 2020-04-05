@@ -23,3 +23,10 @@
 .StripeElement--webkit-autofill {
   background-color: #fefde5 !important;
 }
+
+@media (max-width: 400px){
+  .StripeElement{
+    padding: 10px 0;
+    height: 36px;
+  }
+}

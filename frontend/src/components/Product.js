@@ -12,7 +12,7 @@ import "./scss/Product.scss";
 
 function Product({ match: { params: { product: id } } }){
 
-	const [productObject, setProduct] = useState({});
+	const [productObject, setProduct] = useState({name: ""});
 	const [quantity, setQuantity] = useState("");
 	const [rgb, setRgb] = useState({});
 
@@ -63,7 +63,7 @@ function Product({ match: { params: { product: id } } }){
 					<div className="product__info">
 						<h1 className="product__title">
 						{
-							productObject.name
+							productObject.name.length > 12 ? productObject.name.substring(0, 12) + "..." : productObject.name
 						}
 						</h1>
 						<div className="product__price">

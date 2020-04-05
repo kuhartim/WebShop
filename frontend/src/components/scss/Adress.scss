@@ -1,7 +1,7 @@
 @import "./variables";
 
 .adress{
-	height: 100vh;
+	min-height: 100vh;
 	padding-top: 6rem;
 	display: flex;
 	flex-direction: column;
@@ -115,6 +115,53 @@
 
 			&::before{
 				border-color: $color-blue;
+			}
+		}
+	}
+}
+
+@media (max-width: 590px){
+
+	.adress__form--wrap{
+		width: 90%;
+		padding: 2em 1em;
+	}
+
+	.adress__buttons{
+		width: 90%;
+	}
+
+}
+
+@media (max-width: 400px){
+	.adress__button{
+		margin-top: 3em;
+		padding: .5em 1em;
+		font-size: .9rem;
+
+		&--payment{
+
+			padding-right: 2.5em;
+
+			&::after{
+				width: 10px;
+				height: 10px;
+				right: .5em;
+				top: 50%;
+				transform: rotate(-45deg) translateY(-70%);
+			}
+		}
+
+		&--cart{
+
+			padding-left: 2.5em;
+
+			&::before{
+				width: 10px;
+				height: 10px;
+				left: .5em;
+				top: 50%;
+				transform: rotate(45deg) translateY(-70%);
 			}
 		}
 	}

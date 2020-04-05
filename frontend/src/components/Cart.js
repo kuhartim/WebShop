@@ -17,6 +17,8 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}, setT
 	const [disabled, setDisabled] = useState(true);
 	const [cartEdit, setCartEdit] = useState(false);
 
+	const size = useWindowSize();
+
 	const [numberValue, setNumberValue] = useState(number);
 
 	const onNumberChange = useCallback(({target: {value}}) => setNumberValue(value), [setNumberValue])
@@ -55,11 +57,15 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}, setT
 
 	return (
 		<tr className="cartEntry">
-			<td>
-				{name}
+			<td className="cartEntry__field">
+				{
+					size.width < 650 ? name.substring(0,3) + "..." : (name.length > 15 ? name.substring(0, 15) + "..." : name)
+				}
 			</td>
-			<td>
-				{price}€
+			<td className="cartEntry__field">
+				{
+					size.width < 700 ? price : price + "€"
+				}
 			</td>
 			<td className="cartEntry__quantity">
 				<input className={`cartEntry__number ${disabled ? "" : "cartEntry__number--open"}`} disabled={disabled} value={numberValue} onChange={onNumberChange} />
@@ -88,6 +94,8 @@ function Cart(){
 	const [trigger, setTrigger] = useState(false);
 
 	const history = useHistory();
+
+	const size = useWindowSize();
 
 	useEffect(()=>{
 
@@ -136,16 +144,20 @@ function Cart(){
 			<table>
 				<thead>
 					<tr>
-						<th>
-							Product
+						<th className="cart__field">
+						Product
 						</th>
-						<th>
-							Price
+						<th className="cart__field">
+						{
+							size.width < 700 ? "€" : "Price"
+						}
 						</th>
-						<th>
-							Quantity
+						<th className="cart__field">
+						{
+							size.width < 400 ? "Q." : "Quantity"
+						}
 						</th>
-						<th>
+						<th className="cart__field">
 
 						</th>
 					</tr>
@@ -165,3 +177,58 @@ function Cart(){
 
 
 export default withAuth(Cart);
+
+
+function useWindowSize() {
+
+  const isClient = typeof window === 'object';
+
+
+
+  function getSize() {
+
+    return {
+
+      width: isClient ? window.innerWidth : undefined,
+
+      height: isClient ? window.innerHeight : undefined
+
+    };
+
+  }
+
+
+
+  const [windowSize, setWindowSize] = useState(getSize);
+
+
+
+  useEffect(() => {
+
+    if (!isClient) {
+
+      return false;
+
+    }
+
+    
+
+    function handleResize() {
+
+      setWindowSize(getSize());
+
+    }
+
+
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+
+  }, []); // Empty array ensures that effect is only run on mount and unmount
+
+
+
+  return windowSize;
+
+}

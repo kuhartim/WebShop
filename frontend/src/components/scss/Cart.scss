@@ -1,8 +1,8 @@
 @import "./variables";
 
 .cart{
-	height: 100vh;
-	padding-top: 6rem;
+	min-height: 100vh;
+	padding: 6rem 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -11,7 +11,7 @@
 
 .cart__table{
 	box-shadow: 5px 5px 20px #858585;
-	width: 35rem;
+	width: auto;
 	border-radius: 2rem;
 	padding: 2em;
 	display: flex;
@@ -19,6 +19,8 @@
 	align-items: center;
 
 	& table{
+
+		width: 100%;
 		
 		& tr{
 
@@ -90,7 +92,7 @@
 }
 
 .cartEntry__buttons{
-	width: 100%;
+	min-width: 10rem;
 }
 
 .cartEntry__number{
@@ -153,4 +155,57 @@
 			background-color: $color-green;
 		}
 	} 
+}
+
+	.cart__field,
+	.cartEntry__field{
+		float: center;
+	}
+
+@media (max-width: 800px){
+	.cart__field,
+	.cartEntry__field{
+		word-break: break-all;
+	}
+
+	.cart__table{
+		width: 90%;
+
+		& table{
+		
+			& tr{
+
+				& td{
+					padding: 0;
+				}
+			}
+		}
+
+	}
+}
+
+@media (max-width: 500px){
+	.cartEntry__buttons{
+		flex-direction: column;
+		min-width:5rem;
+		padding: 0;
+	}
+
+	.cartEntry__button{
+		width: 100%;
+		margin: .5em 0;
+	}
+}
+
+
+@media (max-width: 450px){
+
+	.cartEntry__number{
+		width: 2rem;
+	}
+
+	.cartEntry__button{
+		width: 100%;
+		font-size: .8em;
+	}
 }

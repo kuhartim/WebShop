@@ -42,3 +42,34 @@
 	border-bottom: 2px solid #ccc;
 	transform: rotate(-45deg) translateY(-25%) translateX(-25%);
 }
+
+@media (max-width: 570px){
+
+	.cart-progress__step{
+		width: 3rem;
+		height: 3rem;
+		font-size: 1.5em;
+	}
+
+	.cart-progress__arrow-wrap{
+		width: 1em;
+		height: 1em;
+		margin: 0 1.5em;
+	}
+
+}
+
+@media (max-width: 450px){
+
+	.cart-progress__step{
+		width: 2rem;
+		height: 2rem;
+		font-size: 1em;
+	}
+
+	.cart-progress__arrow-wrap{
+		width: .8em;
+		height: .8em;
+		margin: 0 1em;
+	}
+}

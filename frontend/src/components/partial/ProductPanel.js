@@ -45,7 +45,7 @@ function ProductPanel({ id, title, description, price, image }) {
 					<source srcSet={ `${image}_200` } media="(min-width: 1250px)"/>
 					<img src={ `${image}_150` } alt="" className="product-panel__image" />
 				</picture>
-				<h2 className="product-panel__title">{ title }</h2>
+				<h2 className="product-panel__title">{ description.length > 10 ? description.substring(0, 10) + "..." : description }</h2>
 				<p className="product-panel__description">{ description.length > 16 ? description.substring(0, 16) + "..." : description }</p>
 				<span className="product-panel__price">{ price } €</span>
 			</div>

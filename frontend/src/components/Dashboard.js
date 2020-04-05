@@ -7,7 +7,7 @@ import {SessionContext} from "./Login";
 import withAuth from "./partial/withAuth";
 import { logout as apiLogout, isAdmin as adminCheck, getUser} from "../services/shop.api";
 
-import ProductEditor from "./ProductEditor";
+import AdminPanel from "./AdminPanel";
 
 import "./scss/Dashboard.scss";
 
@@ -52,6 +52,8 @@ function Dashboard(){
 		})
 	}, [history, session]);
 
+	console.log("OK");
+
 	return(
 
 		<div className="dashboard">
@@ -60,7 +62,7 @@ function Dashboard(){
 				isAdmin ? (
 					<div className="dashboard__adminPanel">
 						<h1 className="dashboard__adminTitle">Admin panel</h1>
-						<ProductEditor />
+						<AdminPanel />
 					</div>
 				):(
 					<>
