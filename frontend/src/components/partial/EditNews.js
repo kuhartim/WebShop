@@ -40,7 +40,7 @@ function NewsEntry({_id, email, setTrigger}){
 					email.length > 30 ? email.substring(0, 30) + "..." : email
 				}
 			</td>
-			<td>
+			<td className="news-entry__field--button">
 				<button className="news-entry__button news-entry__button--delete" onClick={deleteThisMail}>Delete</button>
 			</td>
 		</tr>
@@ -65,11 +65,9 @@ function EditNews(){
 		_setTrigger(value);
 	}, [lastLoadedPage, _setTrigger]);
 
-	const [disabled, setDisabled] = useState(false);
-
 	useEffect(() => {
 
-		if((page > totalPages || page <= lastLoadedPage.current) || loading) return;
+		if((page > totalPages || page == lastLoadedPage.current) || loading) return;
 
 		setLoading(true);
 
@@ -79,14 +77,14 @@ function EditNews(){
 				setPage(page);
 				setLoading(false);
 				setTotalPages(numberAll);
+				lastLoadedPage.current = page;
 			})
 			.catch(err => {
 				const message = _.get(err, "response.data.message", "Couldn't load news");
 				if(message == "Couldn't load news")
 				NotificationManager.error(message, "Error");
-				setDisabled(false);
 			});
-	}, [page, setNews, setPage, totalPages, setTotalPages, setDisabled, trigger]);
+	}, [page, setNews, setPage, totalPages, setTotalPages, trigger]);
 	
 
 	const newsPrev = useCallback(() => {

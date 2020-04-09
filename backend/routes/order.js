@@ -3,7 +3,9 @@ const router = express.Router();
 const Joi = require('@hapi/joi');
 const auth = require('../src/middleware/auth');
 
-const stripe = require('stripe')('sk_test_ekE5p62AZ2REGKdbi3FxOoPr00gBXHkB2y');
+const config = require('../config');
+
+const stripe = require('stripe')(config.stripeSecret);
 
 const Order = require('../src/models/orders.model');
 const Cart = require('../src/models/cart.model');
@@ -131,7 +133,8 @@ router.post('/:id', auth(), async (req, res) => {
 		if(!order) return res.status(404).send('Not found');
 
 		order.paymentMethod = req.body.paymentMethod;
-		if(req.body.paymentMethod != "stripe")
+		order.price = order.products.reduce((sum, product) => sum + product.number * product.product.price, 0);
+
 		order.status = "waitingForPayment";
 
 		let stripeSecret = null;
@@ -146,6 +149,8 @@ router.post('/:id', auth(), async (req, res) => {
 			});
 
 			stripeSecret = paymentIntent.client_secret;
+
+			order.paymentIntent = paymentIntent.id;
 
 		}
 
@@ -216,9 +221,32 @@ router.get('/', auth(), async (req, res) => {
 
 		const status = req.query.status;
 
-		const order = await Order.findOne({user: req.user.id, status});
+		const order = await Order.findOne({user: req.user.id, status}).sort('-create');
 
 		res.send({order});
+
+	}
+	catch(err){
+		debug(err);
+		res.status(500).send('Internal error');
+	}
+});
+
+//read by user
+router.get('/user', auth(), async (req, res) => {
+
+	try{
+
+		const page = Number(req.query.page) || 1;
+		const perPage = Number(req.query.perPage) || 10;
+
+		const numberAll = await Order.countDocuments({user: req.user.id, status: {$not: { $in: ["created"]}}});
+
+		if(Math.ceil(numberAll / perPage) < page || page < 1 || numberAll == 0) res.status(404).send({ message: "Not found" });
+
+		const orders = await Order.find({user: req.user.id, status: {$not: { $in: ["created"]}}}).sort("-create").skip((page-1) * perPage).limit(perPage);;
+
+		res.send({orders, page, numberAll: Math.ceil(numberAll / perPage)});
 
 	}
 	catch(err){
@@ -232,9 +260,16 @@ router.get('/all', auth(true), async(req, res) => {
 
 	try{
 
-		const orders = await Order.find().sort("-create");
+		const page = Number(req.query.page) || 1;
+		const perPage = Number(req.query.perPage) || 10;
 
-		res.send(orders);
+		const numberAll = await Order.countDocuments();
+
+		if(Math.ceil(numberAll / perPage) < page || page < 1 || numberAll == 0) res.status(404).send({ message: "Not found" });
+
+		const orders = await Order.find().sort("-create").skip((page-1) * perPage).limit(perPage);
+
+		res.send({orders, page, numberAll: Math.ceil(numberAll / perPage)});
 
 	}
 	catch(err){

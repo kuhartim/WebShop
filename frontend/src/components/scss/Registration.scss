@@ -11,7 +11,8 @@
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: auto;
-	height: 25em;
+	grid-gap: 1em;
+	min-height: 25em;
 	border-radius: 2rem;
 	border: none;
 	box-shadow: 5px 5px 20px #858585;
@@ -25,7 +26,14 @@
 	border: 2px solid $color-brand-primary;
 	border-radius: 5em;
 	padding: 0 1em;
+
+	&--textarea{
+		height: 10em;
+		border-radius: 1em;
+		resize: none;
+	}
 }
+
 
 .registration__button{
 	

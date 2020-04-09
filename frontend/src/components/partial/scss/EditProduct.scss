@@ -229,31 +229,37 @@
 }
 
 .edit-products__prev-next{
-	background-color: $color-brand-primary;
+	background-color: transparent;
+	color: $color-brand-primary;
+	border: 2px solid $color-brand-primary;
 
 	&:hover{
-		border-color: $color-brand-primary;
-		color: $color-brand-primary;
+		color: white;
+		background-color: $color-brand-primary;
 	}
 }
 
 .edit-products__del{
-	background-color: $color-red;
+	background-color: transparent;
+	border: 2px solid $color-red;
+	color: $color-red;
 
 	&:hover{
 		border-color: $color-red;
-		color: $color-red;
+		background-color: $color-red;
+		color: white;
 	}
 }
 
 .edit-products__button--disabled{
-	background-color: #aaa;
+	border-color: #aaa;
 	cursor: auto;
+	color: #aaa;
 
 	&:hover{
-		background-color: #aaa;
+		background-color: transparent;
 		border-color: #aaa;
-		color: white;
+		color: #aaa;
 	}
 }
 

@@ -8,13 +8,11 @@ import {updateOrder} from "../services/shop.api";
 
 import withCurrentOrder from "./partial/withCurrentOrder";
 
-import { OrderContext } from "./partial/OrderContext";
-
 import CheckoutForm from "./partial/StripeCheckoutForm";
 
 import "./scss/Payment.scss";
 
-function Payment(){
+function Payment({order}){
 
 	const [paymentMethod, setPaymentMethod] = useState("");
 
@@ -26,14 +24,12 @@ function Payment(){
 
 	const history = useHistory();
 
-	const orderContext = useContext(OrderContext);
-
 	useEffect(() => {
 
-		if(!orderContext.order){
+		if(!order){
 			history.push('/cart');
 		}
-	}, [orderContext, history]);
+	}, [order, history]);
 
 	const next = useCallback(() => {
 
@@ -45,11 +41,12 @@ function Payment(){
 
 		setDisabled(true);
 
-		updateOrder(orderContext.order._id, paymentMethod)
+		console.log(paymentMethod);
+
+		updateOrder(order._id, paymentMethod)
 		.then(({data: {stripeSecret}}) => {
 			setDisabled(false);
 			if(!stripeSecret){
-				NotificationManager.success("Order Completed!", "Success");
 				history.push('/finish');
 			}
 			setStripe(stripeSecret);
@@ -59,13 +56,11 @@ function Payment(){
 			NotificationManager.error("Something went wrong during order completing!", "Error");
 		});
 
-	}, [history, setDisabled, paymentMethod, orderContext, setStripe])
+	}, [history, setDisabled, paymentMethod, order, setStripe])
 
 	const prev = useCallback(() => {
 		history.push('/adress');
 	}, [history])
-
-	console.log(orderContext.order);
 	
 
 	return(

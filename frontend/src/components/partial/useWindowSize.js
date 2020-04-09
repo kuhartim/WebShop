@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 
-export function useWindowSize() {
+function useWindowSize() {
 
   const isClient = typeof window === 'object';
 
@@ -54,3 +54,5 @@ export function useWindowSize() {
   return windowSize;
 
 }
+
+export default useWindowSize;

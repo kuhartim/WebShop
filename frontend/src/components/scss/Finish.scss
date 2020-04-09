@@ -34,6 +34,28 @@
 
 }
 
+.finish__table{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid black;
+	padding: .5em;
+	margin-top: 2em;
+
+	&--title{
+		font-size: 1.2em;
+		font-weight: bold;
+		margin: .5em 0;
+	}
+
+	&--price{
+		font-size: 2em;
+		font-weight: bold;
+		color: $color-green;
+	}
+}
+
 @media (max-width: 550px){
 
 	.finish__text--wrap{

@@ -1,25 +1,26 @@
 @import "../../scss/variables";
 
-.edit-orders__title{
+.edit-users__title{
 	margin: auto;
 	font-size: 1em;
 	font-weight: bold;
 }
 
-.edit-orders__tableWrap{
+
+.edit-users__tableWrap{
 	width: 100%;
 	overflow-x: scroll;
 }
 
-.edit-orders{
+.edit-users{
 	grid-column: 1/2;
-	grid-row: 2/3;
+	grid-row: 3/4;
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr 8fr 2fr;
-	min-height: 26rem;
-	padding: 0 .5em;
+	min-height: 24rem;
 	border-radius: 2em;
+	padding: 0 .5em;
 	border: none;
 	box-shadow: 1px 1px 20px #cccccc;
 	width: 100%;
@@ -27,23 +28,31 @@
 	margin: auto;
 }
 
-.order-entry__field{
-	padding: 0 .5em;
-}
-
-.edit-orders__orderTable{
+.edit-users__usersTable{
 	width: 100%;
+	margin: auto 0;
+
+	&--head{
+		float: left;
+	}
+
+	&--body{
+		
+	}
 }
 
-.edit-orders__buttons{
+.user-entry__field--button{
+	float: right;
+}
+
+.edit-users__buttons{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	margin: 0 1em;
 }
 
-
-.edit-orders__button{
+.edit-users__button{
 	cursor: pointer;
 	height: 2.5rem;
 	width: 30%;
@@ -77,7 +86,7 @@
 	}
 }
 
-.edit-orders__prev-next{
+.edit-users__prev-next{
 	background-color: transparent;
 	color: $color-brand-primary;
 	border: 2px solid $color-brand-primary;
@@ -88,7 +97,7 @@
 	}
 }
 
-.edit-orders__del{
+.edit-users__del{
 	background-color: transparent;
 	border: 2px solid $color-red;
 	color: $color-red;
@@ -100,7 +109,7 @@
 	}
 }
 
-.edit-orders__button--disabled{
+.edit-users__button--disabled{
 	border-color: #aaa;
 	cursor: auto;
 	color: #aaa;
@@ -112,10 +121,8 @@
 	}
 }
 
-
-.order-entry__button{
+.user-entry__button{
 	background-color: white;
-	margin: 0 .3em;
 	height: 1.4rem;
 	width: 4rem;
 	border: 1px solid;
@@ -126,23 +133,28 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-color: #008296;
-	color: #008296;
-	transition: .4s;
-	cursor: pointer;
 	margin: auto;
 
+	&--delete{
+		border-color: red;
+		color: red;
+		transition: .4s;
+		cursor: pointer;
+
 		&:hover{
-			background-color: #008296;
+			background-color: red;
 			color: white;
 		}
+	}
 }
 
 
 @media (max-width: 1490px){
 
-	.edit-orders{
+	.edit-users{
 		grid-column: 1/2;
-		grid-row: 2/3;
+		grid-row: 4/5;
 	}
 }
+
+

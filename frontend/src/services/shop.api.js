@@ -30,6 +30,26 @@ export function getUser(){
 	return backend.post('/api/v1/user/user').catch(handleUnauthorized);
 }
 
+export function userExist(email){
+	return backend.post('/api/v1/user/exist', { email }).catch(handleUnauthorized);
+}
+
+export function checkAnswer(email, answer){
+	return backend.post('/api/v1/user/question', { email, answer }).catch(handleUnauthorized);
+}
+
+export function changePassword(email, answer, password){
+	return backend.post('/api/v1/user/changePassword', {email, answer, password}).catch(handleUnauthorized);
+}
+
+export function getAllUsers(page, perPage=10){
+	return backend.get(`/api/v1/user?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
+}
+
+export function deleteUser(id){
+	return backend.delete(`/api/v1/user/${id}`).catch(handleUnauthorized);
+}
+
 export function recoverToken(){
 
 	const token = Cookies.get("Token");
@@ -42,9 +62,9 @@ export function isLoggedIn() {
 	return !!backend.defaults.headers.common.Authorization;
 }
 
-export function registration(email, password, passwordConfirm){
+export function registration(email, password, passwordConfirm, question, answer){
 
-	return backend.post('/api/v1/user', { email, password, password_confirm: passwordConfirm }).catch(handleUnauthorized);
+	return backend.post('/api/v1/user', { email, password, password_confirm: passwordConfirm, question, answer }).catch(handleUnauthorized);
 }
 
 export function publish(name, description, price, image){
@@ -130,8 +150,12 @@ export function readOrderById(id){
 	return backend.get(`/api/v1/order/order/${id}`).catch(handleUnauthorized);
 }
 
-export function allOrders(){
-	return backend.get('/api/v1/order/all').catch(handleUnauthorized);
+export function allOrders(page, perPage=10){
+	return backend.get(`/api/v1/order/all?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
+}
+
+export function readUserOrders(page, perPage=10){
+	return backend.get(`api/v1/order/user?page=${page}&perPage=${perPage}`).catch(handleUnauthorized);
 }
 
 export function deleteOrder(id){

@@ -16,6 +16,7 @@
 	border: none;
 	box-shadow: 5px 5px 20px #858585;
 	padding: 2em 1em;
+	max-width: 90%;
 }
 
 .order__button{
@@ -61,4 +62,40 @@
 				color: white;
 			}
 		}
+}
+
+.order__tableWrap{
+	width: 100%;
+	overflow-x: scroll;
+	margin: 1em 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	& table, td, th, tr{
+		border: 1px solid #555;
+		border-collapse: collapse;
+	}
+}
+
+.order__tableHead{
+	text-align: center;
+	padding: .5em;
+}
+
+.order__tableField{
+	text-align: center;
+	padding: .5em;
+	word-break: normal;
+}
+
+.order__price{
+	font-size: 2em;
+	font-weight: bold;
+	margin-top: .5em;
+	margin-bottom: 1em;
+	border: 3px solid #555;
+	color: #444;
+	padding: .5em;
+	border-radius: 5em;
 }

@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useRef, useEffect, useContext } from "react";
 
-import withAuth from "./partial/withAuth";
+import withAuth from "./withAuth";
 
-import EditProduct from "./partial/EditProduct";
-import EditOrders from "./partial/EditOrders";
-import EditNews from "./partial/EditNews";
+import EditProduct from "./EditProduct";
+import EditOrders from "./EditOrders";
+import EditNews from "./EditNews";
+import EditUsers from "./EditUsers";
 
 
 import "./scss/AdminPanel.scss";
@@ -20,6 +21,7 @@ function AdminPanel(){
 			<EditProduct />
 			<EditOrders />
 			<EditNews />
+			<EditUsers />
 		</div>
 	);
 }

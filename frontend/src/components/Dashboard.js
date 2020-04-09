@@ -7,7 +7,8 @@ import {SessionContext} from "./Login";
 import withAuth from "./partial/withAuth";
 import { logout as apiLogout, isAdmin as adminCheck, getUser} from "../services/shop.api";
 
-import AdminPanel from "./AdminPanel";
+import AdminPanel from "./partial/AdminPanel";
+import UserPanel from "./partial/UserPanel";
 
 import "./scss/Dashboard.scss";
 
@@ -60,13 +61,15 @@ function Dashboard(){
 			<div className="dashboard__container">
 			{
 				isAdmin ? (
-					<div className="dashboard__adminPanel">
-						<h1 className="dashboard__adminTitle">Admin panel</h1>
+					<div className="dashboard__panel">
+						<h1 className="dashboard__title">Admin panel</h1>
 						<AdminPanel />
 					</div>
 				):(
-					<>
-					</>
+					<div className="dashboard__panel">
+						<h1 className="dashboard__title">Dashboard</h1>
+						<UserPanel />
+					</div>
 				)
 			}
 				<button className="dashboard__button dashboard__button--logout" onClick={logout}>Logout</button>

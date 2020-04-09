@@ -15,6 +15,7 @@ import Adress from "./Adress";
 import Payment from "./Payment";
 import Finish from "./Finish";
 import Order from "./Order";
+import ForgotPassword from "./ForgotPassword";
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
 					<Route exact path="/payment" component={Payment} />
 					<Route exact path="/finish" component={Finish} />
 					<Route exact path="/order/:order" component={Order} />
+					<Route exact path="/forgot" component={ForgotPassword} />
 				</Switch>
 			</Layout>
 		</BrowserRouter>

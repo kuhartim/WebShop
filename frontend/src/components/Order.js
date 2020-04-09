@@ -62,7 +62,7 @@ function Order({ match: { params: { order: id } } }) {
 			setLoadingDelete(false);
 		})
 
-	}, [loading, loadingDelete, setLoadingDelete, id, setTrigger])
+	}, [loading, loadingDelete, setLoadingDelete, id, setTrigger]);
 
 	return (
 		<div className="order">
@@ -103,6 +103,41 @@ function Order({ match: { params: { order: id } } }) {
 				<span>
 				{
 					order.status
+				}
+				</span>
+				<div className="order__tableWrap">
+					<table>
+						<thead>
+							<tr>
+								<th className="order__tableHead"> Title </th>
+								<th className="order__tableHead"> Quantity </th>
+							</tr>
+						</thead>
+						<tbody>
+						{
+							order.products ?
+							order.products.map((product) => 
+								<tr>
+									<td className="order__tableField">
+									{
+										product.product.name
+									}
+									</td>
+									<td className="order__tableField">
+									{
+										product.number
+									}
+									</td>
+								</tr>
+							) :
+							""
+						}
+						</tbody>
+					</table>
+				</div>
+				<span className="order__price">
+				{
+					order.price + "€"
 				}
 				</span>
 				<div>

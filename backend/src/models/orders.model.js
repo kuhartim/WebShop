@@ -55,6 +55,14 @@ const Order = new Schema({
 		default: "created" 
 	},
 
+	price: {
+		type: Number
+	},
+
+	paymentIntent: {
+		type: String
+	},
+
 	create: {
 		type: Date,
 		default: Date.now

@@ -4,6 +4,8 @@ import {NotificationManager} from 'react-notifications';
 import PropTypes from "prop-types";
 import _ from "lodash";
 
+import useWindowSize from "./partial/useWindowSize";
+
 
 import {listCart, updateCart, deleteCartProduct, emptyCart} from "../services/shop.api";
 import withAuth from "./partial/withAuth";
@@ -16,8 +18,6 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}, setT
 	const [editButton, setEditButton] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [cartEdit, setCartEdit] = useState(false);
-
-	const size = useWindowSize();
 
 	const [numberValue, setNumberValue] = useState(number);
 
@@ -59,12 +59,12 @@ function CartEntry({number, cartId, product: { _id: id, name, price } = {}, setT
 		<tr className="cartEntry">
 			<td className="cartEntry__field">
 				{
-					size.width < 650 ? name.substring(0,3) + "..." : (name.length > 15 ? name.substring(0, 15) + "..." : name)
+					name.length > 15 ? name.substring(0, 15) + "..." : name
 				}
 			</td>
 			<td className="cartEntry__field">
 				{
-					size.width < 700 ? price : price + "€"
+					price + "€"
 				}
 			</td>
 			<td className="cartEntry__quantity">
@@ -133,7 +133,11 @@ function Cart(){
 			return;
 		}
 		history.push('/adress');
-	}, [history, cart])
+	}, [history, cart]);
+
+	const redirect = useCallback(() => {
+		history.push('/products');
+	}, [history]);
 
 
 	return(
@@ -141,34 +145,47 @@ function Cart(){
 			<CartProgress />
 			<h1>Cart</h1>
 			<div className="cart__table">
-			<table>
-				<thead>
-					<tr>
-						<th className="cart__field">
-						Product
-						</th>
-						<th className="cart__field">
-						{
-							size.width < 700 ? "€" : "Price"
-						}
-						</th>
-						<th className="cart__field">
-						{
-							size.width < 400 ? "Q." : "Quantity"
-						}
-						</th>
-						<th className="cart__field">
+			{ cart.length > 0 ?
+				<>
+				<table>
+					<thead>
+						<tr className="cart__table--head">
+							<th className="cart__field">
+							Product
+							</th>
+							<th className="cart__field">
+							Price
+							</th>
+							<th className="cart__field">
+							Quantity
+							</th>
+							{
+								size.width > 680 ?
 
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-				{
-					_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} cartId={_id} setTrigger={setTrigger}/>)
-				}
-				</tbody>
-			</table>
-			<button className="cart__delete" onClick={deleteAll}>Delete all</button>
+								<th className="cart__field">
+								</th>
+
+								:
+
+								<></>
+							}
+						</tr>
+					</thead>
+					<tbody>
+					{
+						_.map(cart, ({ product, number, _id }) => <CartEntry key={_id} product={product} number={number} cartId={_id} setTrigger={setTrigger}/>)
+					}
+					</tbody>
+				</table>
+				<button className="cart__delete" onClick={deleteAll}>Delete all</button>
+				</>
+				:
+				<>
+				<span className="cart__emptyCart">Your cart is empty</span>
+				<button className="cart__button" onClick={redirect}>Product page</button>
+				</>
+			
+		}
 			</div>
 			<button className="cart__adress" onClick={next}>Adress</button>
 		</div>
@@ -178,57 +195,3 @@ function Cart(){
 
 export default withAuth(Cart);
 
-
-function useWindowSize() {
-
-  const isClient = typeof window === 'object';
-
-
-
-  function getSize() {
-
-    return {
-
-      width: isClient ? window.innerWidth : undefined,
-
-      height: isClient ? window.innerHeight : undefined
-
-    };
-
-  }
-
-
-
-  const [windowSize, setWindowSize] = useState(getSize);
-
-
-
-  useEffect(() => {
-
-    if (!isClient) {
-
-      return false;
-
-    }
-
-    
-
-    function handleResize() {
-
-      setWindowSize(getSize());
-
-    }
-
-
-
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-
-  }, []); // Empty array ensures that effect is only run on mount and unmount
-
-
-
-  return windowSize;
-
-}

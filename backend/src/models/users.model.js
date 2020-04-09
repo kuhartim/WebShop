@@ -22,6 +22,12 @@ const User = new Schema({
 		enum: ['ADMIN', 'CUSTOMER'],
 		default: 'CUSTOMER'
 	},
+	question: {
+		type: String
+	},
+	answer: {
+		type: String
+	},
 	create: {
 		type: Date,
 		default: Date.now

@@ -9,11 +9,13 @@ const productRouter = require('./routes/product');
 const cartRouter = require('./routes/cart');
 const newsRouter = require('./routes/news');
 const orderRouter = require('./routes/order');
+const paymentRouter = require('./routes/payment');
 
 var app = express();
 
 app.use(cors());
 app.use(logger('dev'));
+app.use('/api/v1/payment', paymentRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

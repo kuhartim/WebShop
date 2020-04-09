@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect} from "react";
 import {Link, useHistoty} from "react-router-dom";
 
+import _ from "lodash";
+
 import {allOrders} from "../../services/shop.api";
 import {NotificationManager} from 'react-notifications';
 
@@ -49,32 +51,53 @@ function OrderEntry({_id, firstName, lastName, adress, paymentMethod,status}){
 function EditOrders(){
 
 	const [orders, setOrders] = useState([]);
-	const [loadingOrders, setLoadingOrders] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [page, setPage] = useState(1);
 
+	const [totalPages, setTotalPages] = useState(1);
+	const lastLoadedPage = useRef(0);
 
-/*
 	const [trigger, _setTrigger] = useState(false);
 	const setTrigger = useCallback((value) => {
 		lastLoadedPage.current = 0;
 		_setTrigger(value);
 	}, [lastLoadedPage, _setTrigger]);
 
-	const [disabled, setDisabled] = useState(false);
 
-*/
 	useEffect(() => {
 
-		allOrders()
-			.then(({data}) => {
-				setOrders(data);
+		if((page > totalPages || page == lastLoadedPage.current) || loading) return;
+
+		setLoading(true);
+
+		allOrders(page)
+			.then(({data: {orders, page, numberAll}}) => {
+				setOrders(orders);
+				setPage(page);
+				setLoading(false);
+				setTotalPages(numberAll);
+				lastLoadedPage.current = page;
 			})
 			.catch((err) => {
-				console.error(err);
-				NotificationManager.error("Couldn't load orders", "Error");
+				const message = _.get(err, "response.data.message", "Couldn't load orders");
+				if(message == "Couldn't load orders")
+				NotificationManager.error(message, "Error");
 			});
 
 
-	}, [setOrders]);
+	}, [setOrders, page, setPage, setLoading, setTotalPages, loading, totalPages]);
+
+	const ordersPrev = useCallback(() => {
+		if(page-1 >= 0){
+			setPage(page-1);
+		}
+	}, [setPage, page]);
+
+	const ordersNext = useCallback(() => {
+		if(page+1 <= totalPages){
+			setPage(page+1);
+		}
+	}, [setPage, page, totalPages]);
 	
 
 
@@ -111,6 +134,10 @@ function EditOrders(){
 						}	
 						</tbody>
 					</table>
+				</div>
+				<div className="edit-orders__buttons">
+					<button className={`edit-orders__button edit-orders__prev-next ${page == 1 ? "edit-orders__button--disabled" : ""}`} disabled={page === 1} onClick={ordersPrev}>Prev</button>
+					<button className={`edit-orders__button edit-orders__prev-next ${page == totalPages ? "edit-orders__button--disabled" : ""}`} disabled={page === totalPages} onClick={ordersNext}>Next</button>
 				</div>
 		</div>
 	);

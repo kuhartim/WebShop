@@ -37,7 +37,7 @@ function ProductEntry({id, title, description, price, setTrigger, isEdit, setNam
 		<tr>
 			<td className="product-entry__field">
 				{
-					title.length > 15 ? title.substring(0, 15) + "..." : title
+					title.length > 20 ? title.substring(0, 20) + "..." : title
 				}
 			</td>
 			<td className="product-entry__field">
@@ -67,7 +67,7 @@ function EditProduct(){
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
 
-	const totalPages = useRef(1);
+	const [totalPages, setTotalPages] = useState(1);
 	const isEdit = useRef("");
 	const lastLoadedPage = useRef(0);
 
@@ -136,13 +136,13 @@ function EditProduct(){
 
 	useEffect(() => {
 
-		if((page > totalPages.current || page <= lastLoadedPage.current) || loading) return;
+		if((page > totalPages || page == lastLoadedPage.current) || loading) return;
 
 		setLoading(true);
 
 		listProducts(page)
 			.then(({ data: { docs, page, totalPages: total} }) => {
-				totalPages.current = total;
+				setTotalPages(total);
 				lastLoadedPage.current = page;
 				setProducts(docs);
 				setLoading(false);
@@ -153,9 +153,19 @@ function EditProduct(){
 				setLoading(false);
 			});
 
-	}, [page, setLoading, loading, totalPages, lastLoadedPage, setProducts, trigger]);
+	}, [page, setLoading, loading, totalPages, setTotalPages, lastLoadedPage, setProducts, trigger]);
 	
+	const productsPrev = useCallback(() => {
+		if(page-1 >= 0){
+			setPage(page-1);
+		}
+	}, [setPage, page]);
 
+	const productsNext = useCallback(() => {
+		if(page+1 <= totalPages){
+			setPage(page+1);
+		}
+	}, [setPage, page, totalPages]);
 
 	const deleteAll = useCallback(() => {
 
@@ -218,6 +228,11 @@ function EditProduct(){
 								}	
 								</tbody>
 							</table>
+						</div>
+						<div className="edit-products__buttons">
+							<button className={`edit-products__button edit-products__prev-next ${page == 1 ? "edit-products__button--disabled" : ""}`} disabled={page === 1} onClick={productsPrev}>Prev</button>
+							<button className="edit-products__button edit-products__del" onClick={deleteAll} >Delete all</button>
+							<button className={`edit-products__button edit-products__prev-next ${page == totalPages ? "edit-products__button--disabled" : ""}`} disabled={page === totalPages} onClick={productsNext}>Next</button>
 						</div>
 				</div>	
 		</div>

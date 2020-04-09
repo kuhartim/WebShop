@@ -23,7 +23,7 @@ function withCurrentOrder(Component){
 			.then(({data}) => {
 				orderContext.setOrder(data.order);
 				loading.current = false;
-				console.log(orderContext);
+				console.log(data.order);
 			})
 			.catch(err => {
 				console.log(err);

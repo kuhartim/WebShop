@@ -51,16 +51,11 @@ router.get('/', auth(true), async (req, res) => {
 		const page = Number(req.query.page) || 1;
 		const perPage = Number(req.query.perPage) || 10;
 
-		debug(req.query.page);
-		debug(req.query.perPage);
-
 		const numberAll = await News.countDocuments();
 
 		if(Math.ceil(numberAll / perPage) < page || page < 1 || numberAll == 0) res.status(404).send({ message: "Not found" });
 
 		const news = await News.find().sort("-create").skip((page-1) * perPage).limit(perPage);
-
-		debug(news);
 
 		res.send({news, page, numberAll: Math.ceil(numberAll / perPage)});
 

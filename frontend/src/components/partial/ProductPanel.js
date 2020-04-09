@@ -12,7 +12,9 @@ function ProductPanel({ id, title, description, price, image }) {
 	const [turn, setTurn] = useState(false);
 	const [unturn, setUnturn] = useState(false);
 
-	const addCart = useCallback(() => {
+	const addCart = useCallback((e) => {
+		e.preventDefault();
+
 		addToCart(id, 1)
 		.then(() => {
 			NotificationManager.success("Successfully added!", "Success");
@@ -40,13 +42,21 @@ function ProductPanel({ id, title, description, price, image }) {
 		<div className="product-panel">
 			<div className={`product-panel__front ${turn ? "product-panel__front--turn" : ""} ${unturn ? "product-panel__front--unturn" : ""}`} onClick={activateTurn}>
 				<picture>
-					<source srcSet={ `${image}_500` } media="(min-width: 2500px)"/>
-					<source srcSet={ `${image}_300` } media="(min-width: 1650px)"/>
+					<source srcSet={ `${image}_500` } media="(min-width: 3220px)"/>
+					<source srcSet={ `${image}_300` } media="(min-width: 1820px)"/>
 					<source srcSet={ `${image}_200` } media="(min-width: 1250px)"/>
 					<img src={ `${image}_150` } alt="" className="product-panel__image" />
 				</picture>
-				<h2 className="product-panel__title">{ description.length > 10 ? description.substring(0, 10) + "..." : description }</h2>
-				<p className="product-panel__description">{ description.length > 16 ? description.substring(0, 16) + "..." : description }</p>
+				<h2 className="product-panel__title">
+				{ 
+					title.length > 10 ? title.substring(0, 10) + "..." : title
+				}
+				</h2>
+				<p className="product-panel__description">
+				{
+				 	description.length > 16 ? description.substring(0, 16) + "..." : description 
+				}
+				</p>
 				<span className="product-panel__price">{ price } €</span>
 			</div>
 			<div className={`product-panel__overlay ${turn ? "product-panel__overlay--turn" : ""} ${unturn ? "product-panel__overlay--unturn" : ""}`}>
